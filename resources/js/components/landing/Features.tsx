@@ -1,4 +1,70 @@
-import { ShieldCheck, Layers, Activity, Zap, BarChart3 } from 'lucide-react';
+import {
+    Activity,
+    BarChart3,
+    Calendar,
+    Columns3,
+    Layers,
+    Server,
+    ShieldCheck,
+    Zap,
+} from 'lucide-react';
+
+const featureCards = [
+    {
+        icon: Zap,
+        title: 'Sprint Planning',
+        description:
+            'Arraste itens do backlog, defina estimativas e equilibre capacidade em tempo real.',
+        color: 'text-blue-400',
+        borderColor: 'hover:border-blue-500/30',
+        glowColor: 'group-hover:bg-blue-500/5',
+    },
+    {
+        icon: ShieldCheck,
+        title: 'Proteção de Capacidade',
+        description:
+            'Limites de WIP, reserva para N1 e alertas automáticos de sprint supercomprometida.',
+        color: 'text-purple-400',
+        borderColor: 'hover:border-purple-500/30',
+        glowColor: 'group-hover:bg-purple-500/5',
+    },
+    {
+        icon: BarChart3,
+        title: 'Telemetria Completa',
+        description:
+            'Velocidade projetada, bloqueios e carga da equipe visíveis em tempo real.',
+        color: 'text-emerald-400',
+        borderColor: 'hover:border-emerald-500/30',
+        glowColor: 'group-hover:bg-emerald-500/5',
+    },
+    {
+        icon: Columns3,
+        title: 'Kanban Board',
+        description:
+            'Board visual com drag-and-drop, transições automáticas e rastreamento de tempo.',
+        color: 'text-amber-400',
+        borderColor: 'hover:border-amber-500/30',
+        glowColor: 'group-hover:bg-amber-500/5',
+    },
+    {
+        icon: Calendar,
+        title: 'Visão Calendário',
+        description:
+            'Sprint timeline com milestones, datas de entrega e visão macro do roadmap.',
+        color: 'text-rose-400',
+        borderColor: 'hover:border-rose-500/30',
+        glowColor: 'group-hover:bg-rose-500/5',
+    },
+    {
+        icon: Server,
+        title: 'Self-Hosting',
+        description:
+            'Docker Compose pronto. Seus dados, seu servidor, sem dependência externa.',
+        color: 'text-cyan-400',
+        borderColor: 'hover:border-cyan-500/30',
+        glowColor: 'group-hover:bg-cyan-500/5',
+    },
+];
 
 export default function Features() {
     return (
@@ -17,7 +83,7 @@ export default function Features() {
                         </h2>
                         <p className="text-lg leading-relaxed text-slate-400">
                             A maioria das ferramentas trata um bug crítico e uma
-                            solicitação de feature como o mesmo "ticket". O
+                            solicitação de feature como o mesmo &quot;ticket&quot;. O
                             Saturno separa duas geometrias distintas de
                             trabalho:
                         </p>
@@ -25,7 +91,7 @@ export default function Features() {
 
                     <div className="grid items-center gap-12 md:grid-cols-2">
                         {/* N1 Card */}
-                        <div className="group relative rounded-3xl border border-rose-500/20 bg-[#0F111A] p-8 transition-all duration-500 hover:scale-[1.02] hover:transform hover:border-rose-500/40">
+                        <div className="group relative rounded-3xl border border-rose-500/20 bg-[#0F111A] p-8 transition-all duration-500 hover:scale-[1.02] hover:border-rose-500/40">
                             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                             <div className="relative z-10">
                                 <div className="mb-6 flex items-center gap-4">
@@ -61,7 +127,7 @@ export default function Features() {
                         </div>
 
                         {/* N2 Card */}
-                        <div className="group relative rounded-3xl border border-emerald-500/20 bg-[#0F111A] p-8 transition-all duration-500 hover:scale-[1.02] hover:transform hover:border-emerald-500/40">
+                        <div className="group relative rounded-3xl border border-emerald-500/20 bg-[#0F111A] p-8 transition-all duration-500 hover:scale-[1.02] hover:border-emerald-500/40">
                             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                             <div className="relative z-10">
                                 <div className="mb-6 flex items-center gap-4">
@@ -98,104 +164,48 @@ export default function Features() {
                 </div>
             </section>
 
-            {/* Zig-Zag Showcase */}
+            {/* Feature Grid — Bento Style */}
             <section id="showcase" className="relative px-6 py-24">
-                <div className="mx-auto max-w-6xl space-y-32">
-                    {/* Feature 1 */}
-                    <div
-                        id="planning"
-                        className="flex flex-col items-center gap-16 md:flex-row"
-                    >
-                        <div className="space-y-6 md:w-1/2">
-                            <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-400">
-                                <Zap className="h-3 w-3" /> Planejamento de
-                                Sprint
-                            </div>
-                            <h3 className="text-3xl font-bold text-white md:text-4xl">
-                                Arraste. Solte. Feito.
-                            </h3>
-                            <p className="text-lg leading-relaxed text-slate-400">
-                                Um quadro de planejamento tátil que parece
-                                físico. Mova itens do backlog para pronto,
-                                defina estimativas visuais e equilibre a
-                                capacidade da sprint em tempo real.
-                            </p>
-                        </div>
-                        <div className="group relative md:w-1/2">
-                            <div className="absolute -inset-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 opacity-20 blur-xl transition duration-500 group-hover:opacity-40" />
-                            <div className="relative rounded-xl border border-white/10 bg-[#161821] p-2 transition duration-500 hover:scale-[1.02] hover:transform">
-                                {/* Feature Image */}
-                                <img
-                                    src="/images/features/sprint-planning.png"
-                                    alt="Visualização do Quadro da Sprint"
-                                    className="aspect-[4/3] w-full rounded-lg object-cover shadow-2xl"
-                                />
-                            </div>
-                        </div>
+                <div className="mx-auto max-w-6xl">
+                    <div className="mx-auto mb-16 max-w-3xl text-center">
+                        <p className="mb-4 text-sm font-semibold tracking-widest text-indigo-400 uppercase">
+                            O que vem incluso
+                        </p>
+                        <h2 className="mb-6 text-3xl font-bold text-white md:text-5xl">
+                            Tudo para gerenciar sprints
+                        </h2>
+                        <p className="text-lg text-slate-400">
+                            Funcionalidades construídas para times de engenharia
+                            que precisam de resultados, não de burocracia.
+                        </p>
                     </div>
 
-                    {/* Feature 2 */}
-                    <div
-                        id="boards"
-                        className="flex flex-col items-center gap-16 md:flex-row-reverse"
-                    >
-                        <div className="space-y-6 md:w-1/2">
-                            <div className="inline-flex items-center gap-2 rounded-full bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-400">
-                                <ShieldCheck className="h-3 w-3" /> Proteção de
-                                Capacidade
-                            </div>
-                            <h3 className="text-3xl font-bold text-white md:text-4xl">
-                                Escudos contra burnout
-                            </h3>
-                            <p className="text-lg leading-relaxed text-slate-400">
-                                Defina limites rígidos de WIP e reserve
-                                capacidade para interrupções N1. O Saturno
-                                sinaliza automaticamente quando sua sprint está
-                                supercomprometida antes mesmo de começar.
-                            </p>
-                        </div>
-                        <div className="group relative md:w-1/2">
-                            <div className="absolute -inset-4 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 opacity-20 blur-xl transition duration-500 group-hover:opacity-40" />
-                            <div className="relative rounded-xl border border-white/10 bg-[#161821] p-2 transition duration-500 hover:scale-[1.02] hover:transform">
-                                <img
-                                    src="/images/features/capacity-protection.png"
-                                    alt="Proteção de Capacidade"
-                                    className="aspect-[4/3] w-full rounded-lg object-cover shadow-2xl"
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {featureCards.map((feature) => (
+                            <div
+                                key={feature.title}
+                                className={`group relative rounded-2xl border border-white/5 bg-[#0F111A]/80 p-6 transition-all duration-500 ${feature.borderColor}`}
+                            >
+                                {/* Hover Glow */}
+                                <div
+                                    className={`absolute inset-0 rounded-2xl opacity-0 transition-opacity ${feature.glowColor} group-hover:opacity-100`}
                                 />
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* Feature 3 */}
-                    <div
-                        id="intelligence"
-                        className="flex flex-col items-center gap-16 md:flex-row"
-                    >
-                        <div className="space-y-6 md:w-1/2">
-                            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
-                                <BarChart3 className="h-3 w-3" /> Visibilidade
-                                Orbital
+                                <div className="relative z-10">
+                                    <div
+                                        className={`mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-white/5 ${feature.color}`}
+                                    >
+                                        <feature.icon className="h-5 w-5" />
+                                    </div>
+                                    <h3 className="mb-2 text-lg font-semibold text-white">
+                                        {feature.title}
+                                    </h3>
+                                    <p className="text-sm leading-relaxed text-slate-400">
+                                        {feature.description}
+                                    </p>
+                                </div>
                             </div>
-                            <h3 className="text-3xl font-bold text-white md:text-4xl">
-                                Telemetria Completa
-                            </h3>
-                            <p className="text-lg leading-relaxed text-slate-400">
-                                Veja quem está bloqueado, quem está
-                                sobrecarregado e sua velocidade projetada em
-                                tempo real. Chega de perguntar "qual é o
-                                status?" na daily.
-                            </p>
-                        </div>
-                        <div className="group relative md:w-1/2">
-                            <div className="absolute -inset-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 opacity-20 blur-xl transition duration-500 group-hover:opacity-40" />
-                            <div className="relative rounded-xl border border-white/10 bg-[#161821] p-2 transition duration-500 hover:scale-[1.02] hover:transform">
-                                <img
-                                    src="/images/features/telemetry.png"
-                                    alt="Telemetria Completa"
-                                    className="aspect-[4/3] w-full rounded-lg object-cover shadow-2xl"
-                                />
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>

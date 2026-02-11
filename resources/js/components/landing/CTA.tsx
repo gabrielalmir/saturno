@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react';
 import { Github, Heart, Star } from 'lucide-react';
 import { ShimmerButton } from '@/components/magicui/shimmer-button';
 import { Button } from '@/components/ui/button';
+import { DotPattern } from '@/components/ui/dot-pattern';
 
 export default function CTA() {
     return (
@@ -9,8 +10,12 @@ export default function CTA() {
             id="cta"
             className="relative overflow-hidden px-6 py-32 text-center"
         >
-            {/* Background Glow */}
-            <div className="absolute inset-0 bg-indigo-600/5" />
+            {/* Dot Pattern Background */}
+            <DotPattern
+                className="absolute inset-0 z-0 text-white/[0.04] [mask-image:radial-gradient(500px_circle_at_center,white,transparent)]"
+            />
+
+            {/* Glow */}
             <div className="pointer-events-none absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-[100px]" />
 
             <div className="relative z-10 mx-auto max-w-3xl space-y-8">
