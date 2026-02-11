@@ -14,25 +14,24 @@ export default function Footer() {
                         <AppLogo />
                     </div>
                     <p className="mb-6 max-w-xs text-sm leading-relaxed text-slate-400">
-                        A plataforma de engenharia que substitui o caos por
-                        clareza. Planeje, desenvolva e entregue com velocidade
-                        de dobra.
+                        Sprint management open source e self-hosted. Planeje,
+                        desenvolva e entregue com total controle sobre seus dados.
                     </p>
                     <div className="flex gap-4">
                         {[
                             {
-                                key: 'twitter',
-                                href: 'https://x.com/',
-                                Icon: Twitter,
-                            },
-                            {
                                 key: 'github',
-                                href: 'https://github.com/',
+                                href: 'https://github.com/gabrielalmir/saturno',
                                 Icon: Github,
                             },
                             {
+                                key: 'twitter',
+                                href: 'https://x.com/gabrielalmir',
+                                Icon: Twitter,
+                            },
+                            {
                                 key: 'linkedin',
-                                href: 'https://www.linkedin.com/',
+                                href: 'https://www.linkedin.com/in/gabrielalmir',
                                 Icon: Linkedin,
                             },
                         ].map(({ key, href, Icon }) => (
@@ -132,47 +131,65 @@ export default function Footer() {
 
                 <div>
                     <h3 className="mb-4 text-sm font-semibold text-white">
-                        Empresa
+                        Comunidade
                     </h3>
                     <ul className="space-y-3 text-sm text-slate-400">
                         <li>
-                            <Link
-                                href="/sobre"
+                            <a
+                                href="https://github.com/gabrielalmir/saturno"
+                                target="_blank"
+                                rel="noreferrer"
                                 className="transition-colors hover:text-indigo-400"
                             >
-                                Sobre
-                            </Link>
+                                GitHub
+                            </a>
                         </li>
                         <li>
-                            <Link
-                                href="/carreiras"
+                            <a
+                                href="https://github.com/gabrielalmir/saturno/issues"
+                                target="_blank"
+                                rel="noreferrer"
                                 className="transition-colors hover:text-indigo-400"
                             >
-                                Carreiras
-                            </Link>
+                                Issues & Bugs
+                            </a>
                         </li>
                         <li>
-                            <Link
-                                href="/blog"
+                            <a
+                                href="https://github.com/gabrielalmir/saturno/discussions"
+                                target="_blank"
+                                rel="noreferrer"
                                 className="transition-colors hover:text-indigo-400"
                             >
-                                Blog
-                            </Link>
+                                Discussões
+                            </a>
                         </li>
                         <li>
-                            <Link
-                                href="/contato"
+                            <a
+                                href="https://github.com/gabrielalmir/saturno/blob/main/CONTRIBUTING.md"
+                                target="_blank"
+                                rel="noreferrer"
                                 className="transition-colors hover:text-indigo-400"
                             >
-                                Contato
-                            </Link>
+                                Contribuir
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
 
             <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 text-xs text-slate-500 md:flex-row">
-                <div>© 2026 Saturno Inc. Todos os direitos reservados.</div>
+                <div>
+                    © 2026 Saturno. Open Source (MIT License).{' '}
+                    <a
+                        href="https://github.com/gabrielalmir/saturno"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300"
+                    >
+                        Feito com ❤️ por Gabriel Almir
+                    </a>
+                </div>
                 <div className="flex gap-6">
                     <Link
                         href="/privacidade"
