@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\WorkItemController::index
-* @see app/Http/Controllers/WorkItemController.php:30
+* @see app/Http/Controllers/WorkItemController.php:22
 * @route '/work-items'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\WorkItemController::index
-* @see app/Http/Controllers/WorkItemController.php:30
+* @see app/Http/Controllers/WorkItemController.php:22
 * @route '/work-items'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\WorkItemController::index
-* @see app/Http/Controllers/WorkItemController.php:30
+* @see app/Http/Controllers/WorkItemController.php:22
 * @route '/work-items'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\WorkItemController::index
-* @see app/Http/Controllers/WorkItemController.php:30
+* @see app/Http/Controllers/WorkItemController.php:22
 * @route '/work-items'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\WorkItemController::index
-* @see app/Http/Controllers/WorkItemController.php:30
+* @see app/Http/Controllers/WorkItemController.php:22
 * @route '/work-items'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\WorkItemController::index
-* @see app/Http/Controllers/WorkItemController.php:30
+* @see app/Http/Controllers/WorkItemController.php:22
 * @route '/work-items'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\WorkItemController::index
-* @see app/Http/Controllers/WorkItemController.php:30
+* @see app/Http/Controllers/WorkItemController.php:22
 * @route '/work-items'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -163,7 +163,7 @@ create.form = createForm
 
 /**
 * @see \App\Http\Controllers\WorkItemController::store
-* @see app/Http/Controllers/WorkItemController.php:121
+* @see app/Http/Controllers/WorkItemController.php:51
 * @route '/work-items'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -178,7 +178,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\WorkItemController::store
-* @see app/Http/Controllers/WorkItemController.php:121
+* @see app/Http/Controllers/WorkItemController.php:51
 * @route '/work-items'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -187,7 +187,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\WorkItemController::store
-* @see app/Http/Controllers/WorkItemController.php:121
+* @see app/Http/Controllers/WorkItemController.php:51
 * @route '/work-items'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -197,7 +197,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\WorkItemController::store
-* @see app/Http/Controllers/WorkItemController.php:121
+* @see app/Http/Controllers/WorkItemController.php:51
 * @route '/work-items'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -207,7 +207,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\WorkItemController::store
-* @see app/Http/Controllers/WorkItemController.php:121
+* @see app/Http/Controllers/WorkItemController.php:51
 * @route '/work-items'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -219,7 +219,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\WorkItemController::show
-* @see app/Http/Controllers/WorkItemController.php:93
+* @see app/Http/Controllers/WorkItemController.php:80
 * @route '/work-items/{work_item}'
 */
 export const show = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -234,7 +234,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\WorkItemController::show
-* @see app/Http/Controllers/WorkItemController.php:93
+* @see app/Http/Controllers/WorkItemController.php:80
 * @route '/work-items/{work_item}'
 */
 show.url = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -261,7 +261,7 @@ show.url = (args: { work_item: string | number } | [work_item: string | number ]
 
 /**
 * @see \App\Http\Controllers\WorkItemController::show
-* @see app/Http/Controllers/WorkItemController.php:93
+* @see app/Http/Controllers/WorkItemController.php:80
 * @route '/work-items/{work_item}'
 */
 show.get = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -271,7 +271,7 @@ show.get = (args: { work_item: string | number } | [work_item: string | number ]
 
 /**
 * @see \App\Http\Controllers\WorkItemController::show
-* @see app/Http/Controllers/WorkItemController.php:93
+* @see app/Http/Controllers/WorkItemController.php:80
 * @route '/work-items/{work_item}'
 */
 show.head = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -281,7 +281,7 @@ show.head = (args: { work_item: string | number } | [work_item: string | number 
 
 /**
 * @see \App\Http\Controllers\WorkItemController::show
-* @see app/Http/Controllers/WorkItemController.php:93
+* @see app/Http/Controllers/WorkItemController.php:80
 * @route '/work-items/{work_item}'
 */
 const showForm = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -291,7 +291,7 @@ const showForm = (args: { work_item: string | number } | [work_item: string | nu
 
 /**
 * @see \App\Http\Controllers\WorkItemController::show
-* @see app/Http/Controllers/WorkItemController.php:93
+* @see app/Http/Controllers/WorkItemController.php:80
 * @route '/work-items/{work_item}'
 */
 showForm.get = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -301,7 +301,7 @@ showForm.get = (args: { work_item: string | number } | [work_item: string | numb
 
 /**
 * @see \App\Http\Controllers\WorkItemController::show
-* @see app/Http/Controllers/WorkItemController.php:93
+* @see app/Http/Controllers/WorkItemController.php:80
 * @route '/work-items/{work_item}'
 */
 showForm.head = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -417,7 +417,7 @@ edit.form = editForm
 
 /**
 * @see \App\Http\Controllers\WorkItemController::update
-* @see app/Http/Controllers/WorkItemController.php:156
+* @see app/Http/Controllers/WorkItemController.php:91
 * @route '/work-items/{work_item}'
 */
 export const update = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -432,7 +432,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\WorkItemController::update
-* @see app/Http/Controllers/WorkItemController.php:156
+* @see app/Http/Controllers/WorkItemController.php:91
 * @route '/work-items/{work_item}'
 */
 update.url = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -459,7 +459,7 @@ update.url = (args: { work_item: string | number } | [work_item: string | number
 
 /**
 * @see \App\Http\Controllers\WorkItemController::update
-* @see app/Http/Controllers/WorkItemController.php:156
+* @see app/Http/Controllers/WorkItemController.php:91
 * @route '/work-items/{work_item}'
 */
 update.put = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -469,7 +469,7 @@ update.put = (args: { work_item: string | number } | [work_item: string | number
 
 /**
 * @see \App\Http\Controllers\WorkItemController::update
-* @see app/Http/Controllers/WorkItemController.php:156
+* @see app/Http/Controllers/WorkItemController.php:91
 * @route '/work-items/{work_item}'
 */
 update.patch = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -479,7 +479,7 @@ update.patch = (args: { work_item: string | number } | [work_item: string | numb
 
 /**
 * @see \App\Http\Controllers\WorkItemController::update
-* @see app/Http/Controllers/WorkItemController.php:156
+* @see app/Http/Controllers/WorkItemController.php:91
 * @route '/work-items/{work_item}'
 */
 const updateForm = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -494,7 +494,7 @@ const updateForm = (args: { work_item: string | number } | [work_item: string | 
 
 /**
 * @see \App\Http\Controllers\WorkItemController::update
-* @see app/Http/Controllers/WorkItemController.php:156
+* @see app/Http/Controllers/WorkItemController.php:91
 * @route '/work-items/{work_item}'
 */
 updateForm.put = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -509,7 +509,7 @@ updateForm.put = (args: { work_item: string | number } | [work_item: string | nu
 
 /**
 * @see \App\Http\Controllers\WorkItemController::update
-* @see app/Http/Controllers/WorkItemController.php:156
+* @see app/Http/Controllers/WorkItemController.php:91
 * @route '/work-items/{work_item}'
 */
 updateForm.patch = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -526,7 +526,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\WorkItemController::destroy
-* @see app/Http/Controllers/WorkItemController.php:204
+* @see app/Http/Controllers/WorkItemController.php:149
 * @route '/work-items/{work_item}'
 */
 export const destroy = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -541,7 +541,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\WorkItemController::destroy
-* @see app/Http/Controllers/WorkItemController.php:204
+* @see app/Http/Controllers/WorkItemController.php:149
 * @route '/work-items/{work_item}'
 */
 destroy.url = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -568,7 +568,7 @@ destroy.url = (args: { work_item: string | number } | [work_item: string | numbe
 
 /**
 * @see \App\Http\Controllers\WorkItemController::destroy
-* @see app/Http/Controllers/WorkItemController.php:204
+* @see app/Http/Controllers/WorkItemController.php:149
 * @route '/work-items/{work_item}'
 */
 destroy.delete = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -578,7 +578,7 @@ destroy.delete = (args: { work_item: string | number } | [work_item: string | nu
 
 /**
 * @see \App\Http\Controllers\WorkItemController::destroy
-* @see app/Http/Controllers/WorkItemController.php:204
+* @see app/Http/Controllers/WorkItemController.php:149
 * @route '/work-items/{work_item}'
 */
 const destroyForm = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -593,7 +593,7 @@ const destroyForm = (args: { work_item: string | number } | [work_item: string |
 
 /**
 * @see \App\Http\Controllers\WorkItemController::destroy
-* @see app/Http/Controllers/WorkItemController.php:204
+* @see app/Http/Controllers/WorkItemController.php:149
 * @route '/work-items/{work_item}'
 */
 destroyForm.delete = (args: { work_item: string | number } | [work_item: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

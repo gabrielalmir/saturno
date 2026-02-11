@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SprintController::index
-* @see app/Http/Controllers/SprintController.php:16
+* @see app/Http/Controllers/SprintController.php:15
 * @route '/sprint-planning'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\SprintController::index
-* @see app/Http/Controllers/SprintController.php:16
+* @see app/Http/Controllers/SprintController.php:15
 * @route '/sprint-planning'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SprintController::index
-* @see app/Http/Controllers/SprintController.php:16
+* @see app/Http/Controllers/SprintController.php:15
 * @route '/sprint-planning'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\SprintController::index
-* @see app/Http/Controllers/SprintController.php:16
+* @see app/Http/Controllers/SprintController.php:15
 * @route '/sprint-planning'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\SprintController::index
-* @see app/Http/Controllers/SprintController.php:16
+* @see app/Http/Controllers/SprintController.php:15
 * @route '/sprint-planning'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\SprintController::index
-* @see app/Http/Controllers/SprintController.php:16
+* @see app/Http/Controllers/SprintController.php:15
 * @route '/sprint-planning'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\SprintController::index
-* @see app/Http/Controllers/SprintController.php:16
+* @see app/Http/Controllers/SprintController.php:15
 * @route '/sprint-planning'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\SprintController::store
-* @see app/Http/Controllers/SprintController.php:69
+* @see app/Http/Controllers/SprintController.php:67
 * @route '/sprints'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\SprintController::store
-* @see app/Http/Controllers/SprintController.php:69
+* @see app/Http/Controllers/SprintController.php:67
 * @route '/sprints'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SprintController::store
-* @see app/Http/Controllers/SprintController.php:69
+* @see app/Http/Controllers/SprintController.php:67
 * @route '/sprints'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +116,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\SprintController::store
-* @see app/Http/Controllers/SprintController.php:69
+* @see app/Http/Controllers/SprintController.php:67
 * @route '/sprints'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +126,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\SprintController::store
-* @see app/Http/Controllers/SprintController.php:69
+* @see app/Http/Controllers/SprintController.php:67
 * @route '/sprints'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -138,7 +138,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\SprintController::update
-* @see app/Http/Controllers/SprintController.php:110
+* @see app/Http/Controllers/SprintController.php:109
 * @route '/sprints/{sprint}'
 */
 export const update = (args: { sprint: number | { id: number } } | [sprint: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -153,7 +153,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\SprintController::update
-* @see app/Http/Controllers/SprintController.php:110
+* @see app/Http/Controllers/SprintController.php:109
 * @route '/sprints/{sprint}'
 */
 update.url = (args: { sprint: number | { id: number } } | [sprint: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -186,7 +186,7 @@ update.url = (args: { sprint: number | { id: number } } | [sprint: number | { id
 
 /**
 * @see \App\Http\Controllers\SprintController::update
-* @see app/Http/Controllers/SprintController.php:110
+* @see app/Http/Controllers/SprintController.php:109
 * @route '/sprints/{sprint}'
 */
 update.put = (args: { sprint: number | { id: number } } | [sprint: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -196,7 +196,7 @@ update.put = (args: { sprint: number | { id: number } } | [sprint: number | { id
 
 /**
 * @see \App\Http\Controllers\SprintController::update
-* @see app/Http/Controllers/SprintController.php:110
+* @see app/Http/Controllers/SprintController.php:109
 * @route '/sprints/{sprint}'
 */
 const updateForm = (args: { sprint: number | { id: number } } | [sprint: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,7 +211,7 @@ const updateForm = (args: { sprint: number | { id: number } } | [sprint: number 
 
 /**
 * @see \App\Http\Controllers\SprintController::update
-* @see app/Http/Controllers/SprintController.php:110
+* @see app/Http/Controllers/SprintController.php:109
 * @route '/sprints/{sprint}'
 */
 updateForm.put = (args: { sprint: number | { id: number } } | [sprint: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
