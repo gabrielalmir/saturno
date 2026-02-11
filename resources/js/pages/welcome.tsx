@@ -6,7 +6,7 @@ import Features from "@/components/landing/Features";
 import Footer from "@/components/landing/Footer";
 import Hero from "@/components/landing/Hero";
 import ManifestoSection from "@/components/landing/ManifestoSection";
-import TrustedBy from "@/components/landing/TrustedBy";
+import Stats from "@/components/landing/Stats";
 import { Button } from "@/components/ui/button";
 import { dashboard, login, register } from "@/routes";
 import type { SharedData } from "@/types";
@@ -103,7 +103,7 @@ export default function Welcome({
 
         <main className="flex-grow">
           <Hero />
-          <TrustedBy />
+          <Stats />
           <Features />
           <Comparison />
           <ManifestoSection />
