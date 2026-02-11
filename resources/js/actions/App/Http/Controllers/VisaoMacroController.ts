@@ -1,8 +1,8 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\DashboardController::index
-* @see app/Http/Controllers/DashboardController.php:16
-* @route '/dashboard'
+* @see \App\Http\Controllers\VisaoMacroController::index
+* @see app/Http/Controllers/VisaoMacroController.php:13
+* @route '/visao-macro'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,22 +11,22 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/dashboard',
+    url: '/visao-macro',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\DashboardController::index
-* @see app/Http/Controllers/DashboardController.php:16
-* @route '/dashboard'
+* @see \App\Http\Controllers\VisaoMacroController::index
+* @see app/Http/Controllers/VisaoMacroController.php:13
+* @route '/visao-macro'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\DashboardController::index
-* @see app/Http/Controllers/DashboardController.php:16
-* @route '/dashboard'
+* @see \App\Http\Controllers\VisaoMacroController::index
+* @see app/Http/Controllers/VisaoMacroController.php:13
+* @route '/visao-macro'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -34,9 +34,9 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\DashboardController::index
-* @see app/Http/Controllers/DashboardController.php:16
-* @route '/dashboard'
+* @see \App\Http\Controllers\VisaoMacroController::index
+* @see app/Http/Controllers/VisaoMacroController.php:13
+* @route '/visao-macro'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -44,9 +44,9 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\DashboardController::index
-* @see app/Http/Controllers/DashboardController.php:16
-* @route '/dashboard'
+* @see \App\Http\Controllers\VisaoMacroController::index
+* @see app/Http/Controllers/VisaoMacroController.php:13
+* @route '/visao-macro'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -54,9 +54,9 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 })
 
 /**
-* @see \App\Http\Controllers\DashboardController::index
-* @see app/Http/Controllers/DashboardController.php:16
-* @route '/dashboard'
+* @see \App\Http\Controllers\VisaoMacroController::index
+* @see app/Http/Controllers/VisaoMacroController.php:13
+* @route '/visao-macro'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -64,9 +64,9 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\DashboardController::index
-* @see app/Http/Controllers/DashboardController.php:16
-* @route '/dashboard'
+* @see \App\Http\Controllers\VisaoMacroController::index
+* @see app/Http/Controllers/VisaoMacroController.php:13
+* @route '/visao-macro'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url({
@@ -80,6 +80,6 @@ indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 index.form = indexForm
 
-const DashboardController = { index }
+const VisaoMacroController = { index }
 
-export default DashboardController
+export default VisaoMacroController
