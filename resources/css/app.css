@@ -1,0 +1,456 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+    /* Light mode keeps hierarchy and clarity; minimal saturation */
+    --background: #f3f5fb;
+    --foreground: #0d1b2e;
+
+    --card: #ffffff;
+    --card-foreground: #111827;
+
+    --popover: #ffffff;
+    --popover-foreground: #0d1b2e;
+
+    --primary: #5a6cf6;
+    --primary-foreground: #ffffff;
+
+    --secondary: #e8ecf5;
+    --secondary-foreground: #1f2937;
+
+    --muted: #eef1f8;
+    --muted-foreground: #5b6475;
+
+    --accent: #e3e8ff;
+    --accent-foreground: #2f3b8f;
+
+    --destructive: #e5484d;
+    --destructive-foreground: #ffffff;
+
+    --border: #d9dfea;
+    --input: #d9dfea;
+    --ring: #5a6cf6;
+
+    --chart-1: #5a6cf6;
+    --chart-2: #19b7a0;
+    --chart-3: #f4a640;
+    --chart-4: #e45da8;
+    --chart-5: #8a7bff;
+
+    --radius: 0.625rem;
+
+    --sidebar: #f1f3f9;
+    --sidebar-foreground: #0d1b2e;
+    --sidebar-primary: #5a6cf6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #e3e8ff;
+    --sidebar-accent-foreground: #2f3b8f;
+    --sidebar-border: #d9dfea;
+    --sidebar-ring: #5a6cf6;
+}
+
+.dark {
+    /* Dark mode: deep space with layered surfaces; high legibility */
+    --background: #080a12;
+    --foreground: #e6ecf7;
+
+    /* Layered surfaces with subtle translucency for depth */
+    --card: rgba(16, 20, 33, 0.76);
+    --card-foreground: #f5f7fb;
+
+    --popover: #0f1422;
+    --popover-foreground: #e6ecf7;
+
+    /* Controlled neon accent; avoids overpowering content */
+    --primary: #6e7cff;
+    --primary-foreground: #ffffff;
+
+    --secondary: #11182a;
+    --secondary-foreground: #b6c3ff;
+
+    --muted: #121929;
+    --muted-foreground: #97a3bb;
+
+    --accent: #1c2336;
+    --accent-foreground: #cad4ff;
+
+    --destructive: #e5484d;
+    --destructive-foreground: #ffffff;
+
+    /* Subtle, consistent edges to avoid visual noise */
+    --border: rgba(255, 255, 255, 0.07);
+    --input: rgba(255, 255, 255, 0.07);
+    --ring: #6e7cff;
+
+    --chart-1: #6e7cff;
+    --chart-2: #1cd6c1;
+    --chart-3: #f6b44c;
+    --chart-4: #ee6fb3;
+    --chart-5: #8f85ff;
+
+    --sidebar: #05070d;
+    --sidebar-foreground: #e6ecf7;
+    --sidebar-primary: #6e7cff;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #161c2d;
+    --sidebar-accent-foreground: #cad4ff;
+    --sidebar-border: rgba(255, 255, 255, 0.06);
+    --sidebar-ring: #6e7cff;
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+@layer components {
+    .calendar-shell {
+        @apply rounded-xl border border-border bg-card/70 shadow-sm;
+    }
+
+    .calendar-event {
+        @apply rounded-md border px-2 py-1 text-xs font-medium shadow-sm;
+    }
+
+    .calendar-event-sprint {
+        background: color-mix(in srgb, var(--primary) 22%, transparent);
+        border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+        color: var(--foreground);
+    }
+
+    .calendar-event-work-item {
+        background: color-mix(in srgb, var(--chart-2) 22%, transparent);
+        border-color: color-mix(in srgb, var(--chart-2) 50%, transparent);
+        color: var(--foreground);
+    }
+
+    .calendar-event-planned {
+        background: color-mix(in srgb, var(--primary) 18%, transparent);
+        border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+    }
+
+    .calendar-event-priority-p0 {
+        border-color: color-mix(in srgb, #ef4444 55%, transparent);
+    }
+
+    .calendar-event-priority-p1 {
+        border-color: color-mix(in srgb, #f97316 55%, transparent);
+    }
+
+    .calendar-event-priority-p2 {
+        border-color: color-mix(in srgb, #eab308 55%, transparent);
+    }
+
+    .calendar-event-priority-p3 {
+        border-color: color-mix(in srgb, #64748b 55%, transparent);
+    }
+
+    .badge-tier-n1 {
+        @apply border-rose-500/30 bg-rose-500/10 text-rose-400;
+    }
+
+    .badge-tier-n2 {
+        @apply border-blue-500/30 bg-blue-500/10 text-blue-400;
+    }
+
+    .badge-status-blocked {
+        @apply border-amber-500/30 bg-amber-500/10 text-amber-400;
+    }
+
+    .badge-status-ready {
+        @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-400;
+    }
+
+    .badge-status-in-progress {
+        @apply border-blue-500/30 bg-blue-500/10 text-blue-400;
+    }
+
+    .badge-status-done {
+        @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-400;
+    }
+
+    .badge-priority-p0 {
+        @apply border-red-500/30 bg-red-500/10 text-red-400;
+    }
+
+    .badge-priority-p1 {
+        @apply border-orange-500/30 bg-orange-500/10 text-orange-400;
+    }
+
+    .badge-priority-p2 {
+        @apply border-yellow-500/30 bg-yellow-500/10 text-yellow-400;
+    }
+
+    .badge-priority-p3 {
+        @apply border-slate-500/30 bg-slate-500/10 text-slate-400;
+    }
+
+    .badge-status-backlog {
+        @apply border-slate-500/30 bg-slate-500/10 text-slate-400;
+    }
+
+    .badge-status-triage {
+        @apply border-purple-500/30 bg-purple-500/10 text-purple-400;
+    }
+
+    .badge-status-cancelled {
+        @apply border-gray-500/30 bg-gray-500/10 text-gray-400 line-through;
+    }
+}
+
+@layer utilities {
+    @keyframes marquee {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-100% - var(--gap)));
+        }
+    }
+
+    @keyframes marquee-vertical {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(calc(-100% - var(--gap)));
+        }
+    }
+
+    .animate-marquee {
+        animation: marquee var(--duration, 40s) linear infinite;
+    }
+
+    .animate-marquee-vertical {
+        animation: marquee-vertical var(--duration, 40s) linear infinite;
+    }
+
+    @keyframes gradient {
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .animate-gradient {
+        animation: gradient 8s ease infinite;
+    }
+
+    @keyframes shiny-text {
+        0% {
+            background-position: calc(-1 * var(--shiny-width)) 0;
+        }
+        100% {
+            background-position: calc(100% + var(--shiny-width)) 0;
+        }
+    }
+
+    .animate-shiny-text {
+        animation: shiny-text 2.8s linear infinite;
+    }
+
+    @keyframes shimmer-slide {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(-50%);
+        }
+    }
+
+    .animate-shimmer-slide {
+        animation: shimmer-slide var(--speed, 3s) linear infinite;
+    }
+
+    @keyframes spin-around {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-spin-around {
+        animation: spin-around calc(var(--speed, 3s) * 0.8) linear infinite;
+    }
+}
+
+.rbc-calendar {
+    font-family: inherit;
+    color: var(--foreground);
+}
+
+.rbc-toolbar {
+    @apply mb-6 gap-3;
+}
+
+.rbc-toolbar button {
+    @apply rounded-md border border-border bg-card/60 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-muted;
+}
+
+.rbc-toolbar button:active,
+.rbc-toolbar button.rbc-active {
+    @apply border-primary/50 bg-primary/10 text-primary shadow-none;
+}
+
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view {
+    @apply overflow-hidden rounded-xl border border-border bg-card/30 backdrop-blur-md;
+}
+
+.rbc-header {
+    @apply border-border bg-muted/30 py-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase;
+    border-bottom: 1px solid var(--border);
+}
+
+.rbc-month-row + .rbc-month-row {
+    @apply border-border;
+}
+
+.rbc-day-bg + .rbc-day-bg {
+    @apply border-border;
+}
+
+/* Day cell containment */
+.rbc-day-bg {
+    @apply transition-colors hover:bg-muted/20;
+}
+
+.rbc-off-range-bg {
+    @apply bg-muted/10;
+}
+
+.rbc-today {
+    @apply bg-primary/5;
+}
+
+.rbc-event {
+    @apply rounded border px-2 py-1 text-xs font-medium shadow-sm;
+}
+
+.rbc-time-header,
+.rbc-time-content,
+.rbc-time-view,
+.rbc-agenda-view {
+    border-color: var(--border) !important;
+}
+
+.rbc-time-gutter,
+.rbc-time-content > * + * {
+    border-color: var(--border);
+}
+
+.rbc-timeslot-group {
+    border-bottom: 1px solid var(--border);
+}
+
+.rbc-time-slot {
+    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+.rbc-label {
+    @apply text-xs text-muted-foreground;
+}
+
+.rbc-current-time-indicator {
+    background: color-mix(in srgb, var(--chart-2) 80%, transparent);
+}
+
+.rbc-agenda-table {
+    @apply text-sm;
+}
+
+.rbc-agenda-table thead > tr > th {
+    @apply bg-muted/30 text-xs tracking-wider text-muted-foreground uppercase;
+    border-bottom: 1px solid var(--border);
+}
+
+.rbc-agenda-table tbody > tr > td {
+    border-bottom: 1px solid var(--border);
+}
+
+.rbc-agenda-date,
+.rbc-agenda-time {
+    @apply text-xs text-muted-foreground;
+}
+
+.rbc-show-more {
+    @apply bg-transparent text-xs font-medium text-primary hover:text-primary/80 hover:underline;
+}
+
+/* Remove default heavy borders in dark mode */
+.dark .rbc-header + .rbc-header {
+    border-left: 1px solid var(--border);
+}

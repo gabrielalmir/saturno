@@ -1,0 +1,37 @@
+# Laravel defaults
+/vendor/
+/.idea/
+/.vscode/
+/.phpunit.cache/
+/.phpunit.result.cache
+/.env
+/.env.*
+/node_modules/
+/public/storage
+/storage/*.key
+/storage/app/public
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/logs/*
+/bootstrap/cache/*
+
+# Build artifacts
+/public/js
+/public/css
+/public/mix-manifest.json
+/public/hot
+/public/build
+/public/storage
+/public/vendor
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS cruft
+.DS_Store
+Thumbs.db

@@ -1,0 +1,54 @@
+.git
+.gitignore
+.gitattributes
+
+# CI/editor/project metadata (not needed in production images)
+.github
+.vscode
+.idea
+.editorconfig
+AGENTS.md
+CODEBASE_INDEX.md
+PRD.md
+README.md
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Dependencies are installed in-image
+node_modules
+vendor
+
+# Tests and local test outputs
+tests
+playwright.config.ts
+playwright-report
+test-results
+.phpunit.result.cache
+.pest.cache
+phpunit.xml
+
+# Frontend/dev tooling config not required to run the app in production
+eslint.config.js
+pint.json
+components.json
+
+# Non-runtime docs/assets
+docs
+design
+skills
+
+# Local runtime state and build outputs (generated during image build or at runtime)
+storage
+bootstrap/cache
+public/hot
+public/build
+
+# Logs and OS junk
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store

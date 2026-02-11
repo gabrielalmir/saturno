@@ -1,0 +1,17 @@
+* text=auto
+*.php diff=php
+*.blade.php diff=html
+*.js diff=javascript
+*.ts diff=typescript
+*.tsx diff=typescript
+*.css diff=css
+*.scss diff=css
+*.vue diff=vue
+*.md diff=markdown
+*.json diff=json
+*.yml diff=yaml
+*.yaml diff=yaml
+composer.lock merge=union
+.env export-ignore
+/storage export-ignore
+/bootstrap/cache export-ignore
