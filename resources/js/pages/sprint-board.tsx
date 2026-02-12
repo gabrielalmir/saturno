@@ -138,6 +138,57 @@ function getDurationInfo(item: WorkItem) {
     };
 }
 
+function isOverdue(item: WorkItem): boolean {
+    if (!item.due_date || item.status === 'done') return false;
+    const dueDate = new Date(item.due_date);
+    if (Number.isNaN(dueDate.getTime())) return false;
+    return dueDate.getTime() < Date.now();
+}
+
+type CardIndicatorTone = 'warning' | 'danger' | null;
+
+function getCardIndicatorTone(item: WorkItem): CardIndicatorTone {
+    if (isOverdue(item)) return 'danger';
+    if (item.status === 'blocked') return 'warning';
+    return null;
+}
+
+function StatusIndicatorBadge({
+    tone,
+    children,
+}: {
+    tone: 'warning' | 'danger';
+    children: string;
+}) {
+    const toneClass =
+        tone === 'danger'
+            ? 'border-[color:var(--danger)]/40 bg-[color:var(--danger)]/10 text-[color:var(--danger)]'
+            : 'border-[color:var(--warning)]/35 bg-[color:var(--warning)]/10 text-[color:var(--warning)]';
+
+    return (
+        <span className={`rounded-full border px-2 py-0.5 ${toneClass}`}>
+            {children}
+        </span>
+    );
+}
+
+function SummaryMetricBadge({
+    children,
+    quiet = false,
+}: {
+    children: React.ReactNode;
+    quiet?: boolean;
+}) {
+    return (
+        <Badge
+            variant="secondary"
+            className={`border border-border-subtle bg-muted/35 px-2.5 py-1 ${quiet ? 'text-[color:var(--text-tertiary)]' : 'text-[color:var(--text-secondary)]'}`}
+        >
+            {children}
+        </Badge>
+    );
+}
+
 interface SortableCardProps {
     item: WorkItem;
     isDragging?: boolean;
@@ -199,21 +250,17 @@ function WorkItemCard({
         event: React.MouseEvent | React.KeyboardEvent,
     ) => void;
 }) {
-    const tierClass = item.tier === 'N1' ? 'badge-tier-n1' : 'badge-tier-n2';
     const durationInfo = getDurationInfo(item);
     const dueDateLabel = item.due_date
         ? format(new Date(item.due_date), 'dd/MM')
         : null;
-    const priorityTone: Record<string, string> = {
-        P0: 'bg-rose-500/15 text-rose-300 border-rose-400/40',
-        P1: 'bg-amber-500/15 text-amber-300 border-amber-400/40',
-        P2: 'bg-sky-500/15 text-sky-300 border-sky-400/40',
-        P3: 'bg-slate-500/15 text-slate-300 border-slate-400/40',
-    };
+    const overdue = isOverdue(item);
+    const indicatorTone = getCardIndicatorTone(item);
+    const isDone = item.status === 'done';
 
     return (
         <Card
-            className={`group cursor-grab rounded-xl border border-border/60 bg-card/95 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg active:cursor-grabbing ${isSelected ? 'ring-2 ring-primary/60' : ''} ${isUpdated ? 'border-primary/60 bg-accent/20' : ''}`}
+            className={`group relative cursor-grab overflow-hidden rounded-xl border border-border/70 bg-card/95 shadow-sm transition-[background-color,border-color,box-shadow,opacity] duration-150 ease-out hover:border-border hover:bg-muted/30 active:cursor-grabbing ${isSelected ? 'ring-2 ring-[color:var(--focus-ring)] ring-offset-0' : ''} ${isUpdated ? 'border-[color:var(--focus-ring)] bg-[color:var(--accent-soft)]' : ''} ${isDone ? 'opacity-75' : ''}`}
             role="button"
             tabIndex={0}
             onClick={(event) => onSelect?.(item, event)}
@@ -230,17 +277,22 @@ function WorkItemCard({
             }}
             onDoubleClick={() => router.visit(`/work-items/${item.id}`)}
         >
+            {indicatorTone && (
+                <span
+                    aria-hidden
+                    className={`absolute inset-y-2 left-0 w-[3px] rounded-r-sm ${indicatorTone === 'danger' ? 'bg-[color:var(--danger)]' : 'bg-[color:var(--warning)]'}`}
+                />
+            )}
             <CardContent className="space-y-2.5 p-3">
-                <div className="h-1.5 w-12 rounded-full bg-primary/50 transition-colors group-hover:bg-primary/75" />
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-1.5">
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-[color:var(--text-tertiary)]">
                             #{item.id}
                         </span>
                         {item.epic_id && (
                             <Badge
                                 variant="outline"
-                                className="px-1.5 py-0 text-[10px]"
+                                className="border-border-subtle px-1.5 py-0 text-[10px] text-[color:var(--text-tertiary)]"
                             >
                                 EP-{item.epic_id}
                             </Badge>
@@ -248,7 +300,7 @@ function WorkItemCard({
                         {item.ticket_id && (
                             <Badge
                                 variant="outline"
-                                className="px-1.5 py-0 text-[10px]"
+                                className="border-border-subtle px-1.5 py-0 text-[10px] text-[color:var(--text-tertiary)]"
                             >
                                 TK-{item.ticket_id}
                             </Badge>
@@ -256,24 +308,34 @@ function WorkItemCard({
                     </div>
                     <Badge
                         variant="outline"
-                        className={`${tierClass} px-1.5 py-0 text-[10px] font-semibold`}
+                        className="border-border-subtle px-1.5 py-0 text-[10px] font-medium text-[color:var(--text-secondary)]"
                     >
                         {item.tier}
                     </Badge>
                 </div>
-                <h3 className="line-clamp-2 text-sm leading-snug font-medium">
+                <h3 className="line-clamp-2 text-sm leading-snug font-medium text-[color:var(--text-primary)]">
                     {item.title}
                 </h3>
                 {item.status === 'blocked' && item.blocked_reason && (
-                    <p className="line-clamp-2 rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[11px] text-amber-200">
+                    <p className="line-clamp-2 rounded-md border border-[color:var(--border-subtle)] bg-muted/30 px-2 py-1 text-[11px] text-[color:var(--text-secondary)]">
                         {item.blocked_reason}
                     </p>
                 )}
                 {(durationInfo || dueDateLabel || item.size) && (
-                    <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-[color:var(--text-tertiary)]">
+                        {item.status === 'blocked' && (
+                            <StatusIndicatorBadge tone="warning">
+                                Bloqueado
+                            </StatusIndicatorBadge>
+                        )}
+                        {overdue && (
+                            <StatusIndicatorBadge tone="danger">
+                                Atrasado
+                            </StatusIndicatorBadge>
+                        )}
                         {durationInfo && (
                             <span
-                                className="rounded-full border border-border/70 bg-muted/40 px-2 py-0.5"
+                                className="rounded-full border border-border/70 bg-muted/35 px-2 py-0.5"
                                 title={`Duração desde ${durationInfo.startLabel}${durationInfo.endLabel ? ` até ${durationInfo.endLabel}` : ''}`}
                             >
                                 {durationInfo.label}: {durationInfo.duration}
@@ -281,14 +343,14 @@ function WorkItemCard({
                         )}
                         {dueDateLabel && (
                             <span
-                                className="rounded-full border border-border/70 bg-muted/30 px-2 py-0.5"
+                                className="rounded-full border border-border/70 bg-muted/35 px-2 py-0.5"
                                 title={`Entrega em ${format(new Date(item.due_date!), 'dd/MM/yyyy')}`}
                             >
                                 Entrega: {dueDateLabel}
                             </span>
                         )}
                         {item.size && (
-                            <span className="rounded-full border border-border/70 bg-muted/40 px-2 py-0.5">
+                            <span className="rounded-full border border-border/70 bg-muted/35 px-2 py-0.5">
                                 Tamanho: {item.size}
                             </span>
                         )}
@@ -298,26 +360,26 @@ function WorkItemCard({
                     <div className="flex items-center gap-1.5">
                         <Badge
                             variant="outline"
-                            className="px-1.5 py-0 text-[10px] uppercase"
+                            className="border-border-subtle px-1.5 py-0 text-[10px] text-[color:var(--text-secondary)] uppercase"
                         >
                             {item.type}
                         </Badge>
                         <Badge
                             variant="outline"
-                            className={`px-1.5 py-0 text-[10px] ${priorityTone[item.priority] || ''}`}
+                            className="border-border-subtle px-1.5 py-0 text-[10px] text-[color:var(--text-secondary)]"
                         >
                             {item.priority}
                         </Badge>
                     </div>
                     <div className="flex items-center gap-1">
                         {item.estimate && (
-                            <span className="text-[10px] text-muted-foreground">
+                            <span className="text-[10px] text-[color:var(--text-tertiary)]">
                                 {item.estimate}{' '}
                                 {item.tier === 'N1' ? 'h' : 'SP'}
                             </span>
                         )}
                         <div
-                            className="flex h-6 w-6 items-center justify-center rounded-full border border-border/80 bg-muted text-[9px] font-semibold"
+                            className="flex h-6 w-6 items-center justify-center rounded-full border border-border/70 bg-muted/60 text-[9px] font-semibold text-[color:var(--text-secondary)]"
                             title={item.assignee?.name}
                         >
                             {getInitials(item.assignee?.name)}
@@ -393,17 +455,6 @@ function DroppableColumn({
     };
 
     const isOverLimit = wipLimit && items.length >= wipLimit;
-    const colorClasses: Record<string, string> = {
-        backlog: 'border-t-slate-500',
-        ready: 'border-t-emerald-500',
-        in_progress: 'border-t-blue-500',
-        blocked: 'border-t-amber-500',
-        done: 'border-t-green-500',
-        default: 'border-t-slate-500',
-    };
-    const colorClass = column.status_mapping
-        ? colorClasses[column.status_mapping] || colorClasses.default
-        : colorClasses.default;
 
     const priorityOrder = ['P0', 'P1', 'P2', 'P3'];
     const groupedItems =
@@ -425,9 +476,9 @@ function DroppableColumn({
 
     return (
         <div
-            className={`flex h-full w-[300px] min-w-[300px] flex-col rounded-xl border border-border/70 bg-muted/25 shadow-sm ${isOver ? 'ring-2 ring-primary/70' : ''}`}
+            className={`flex h-full w-[300px] min-w-[300px] flex-col rounded-xl border border-border-subtle bg-surface shadow-sm ${isOver ? 'ring-1 ring-[color:var(--focus-ring)]' : ''}`}
         >
-            <div className={`rounded-t-xl border-t-2 ${colorClass} px-3 py-2`}>
+            <div className="rounded-t-xl border-b border-border-subtle px-3 py-2">
                 <div className="flex items-center justify-between">
                     {isEditingName ? (
                         <Input
@@ -441,7 +492,7 @@ function DroppableColumn({
                     ) : (
                         <button
                             type="button"
-                            className="flex flex-1 cursor-pointer items-center gap-2 py-1 text-left text-sm font-semibold"
+                            className="flex flex-1 cursor-pointer items-center gap-2 py-1 text-left text-sm font-medium text-[color:var(--text-primary)]"
                             onClick={() => setIsEditingName(true)}
                         >
                             <span
@@ -452,7 +503,7 @@ function DroppableColumn({
                             </span>
                             <Badge
                                 variant="secondary"
-                                className="h-4 min-w-[1.25rem] justify-center px-1.5 text-[10px]"
+                                className="h-4 min-w-[1.25rem] justify-center border border-border-subtle bg-muted/35 px-1.5 text-[10px] text-[color:var(--text-secondary)]"
                             >
                                 {items.length}
                             </Badge>
@@ -462,12 +513,11 @@ function DroppableColumn({
                     <div className="flex items-center gap-1">
                         {wipLimit && (
                             <Badge
-                                variant={
-                                    isOverLimit ? 'destructive' : 'outline'
-                                }
-                                className="h-5 px-1.5 text-[10px] whitespace-nowrap"
+                                variant="outline"
+                                className="h-5 border-border-subtle px-1.5 text-[10px] text-[color:var(--text-secondary)] whitespace-nowrap"
                             >
                                 {items.length}/{wipLimit}
+                                {isOverLimit ? ' WIP' : ''}
                             </Badge>
                         )}
                         <DropdownMenu>
@@ -528,7 +578,7 @@ function DroppableColumn({
             </div>
             <div
                 ref={setNodeRef}
-                className={`min-h-[280px] flex-1 space-y-2 overflow-y-auto p-2.5 ${isOver ? 'bg-primary/5' : ''}`}
+                className={`min-h-[280px] flex-1 space-y-2 overflow-y-auto p-2.5 ${isOver ? 'bg-[color:var(--focus-background)]' : ''}`}
             >
                 <SortableContext
                     items={groupedItems.map((i) => `item-${i.id}`)}
@@ -545,7 +595,7 @@ function DroppableColumn({
                         return (
                             <div key={item.id}>
                                 {showGroupHeader && (
-                                    <div className="sticky top-0 z-10 -mx-1 mb-1 rounded-md bg-card/80 px-2 py-1 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase backdrop-blur">
+                                    <div className="sticky top-0 z-10 -mx-1 mb-1 rounded-md border border-border-subtle bg-surface px-2 py-1 text-[11px] font-semibold tracking-wide text-[color:var(--text-tertiary)] uppercase">
                                         {item.type}
                                     </div>
                                 )}
@@ -562,19 +612,19 @@ function DroppableColumn({
                     })}
                 </SortableContext>
                 {groupedItems.length === 0 && (
-                    <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed bg-background/40 p-4 text-xs text-muted-foreground">
+                    <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-border-subtle bg-muted/20 p-4 text-xs text-[color:var(--text-tertiary)]">
                         {column.status_mapping === 'done'
                             ? 'Tarefas concluídas'
                             : 'Arraste itens aqui'}
                     </div>
                 )}
             </div>
-            <div className="border-t border-border/50 p-2">
+            <div className="border-t border-border-subtle p-2">
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={onAddCard}
-                    className="w-full justify-start text-muted-foreground hover:bg-background/60 hover:text-foreground"
+                    className="w-full justify-start text-[color:var(--text-secondary)] hover:bg-muted/35 hover:text-[color:var(--text-primary)]"
                 >
                     <Plus className="mr-2 h-4 w-4" />
                     Adicionar cartão
@@ -1644,8 +1694,8 @@ export default function SprintBoard({
                 onDragOver={handleDragOver}
                 onDragEnd={handleDragEnd}
             >
-                <div className="flex h-full flex-1 flex-col gap-4 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.08),transparent_42%)] p-4 md:p-6">
-                    <div className="sticky top-0 z-20 rounded-xl border border-border/50 bg-background/90 p-3 shadow-sm backdrop-blur">
+                <div className="flex h-full flex-1 flex-col gap-4 bg-background p-4 md:p-6">
+                    <div className="sticky top-0 z-20 rounded-xl border border-border-subtle bg-background/95 p-3 shadow-sm">
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                             <div>
                                 <div className="flex items-center gap-2">
@@ -1655,12 +1705,17 @@ export default function SprintBoard({
                                     {sprint && (
                                         <Badge
                                             variant="outline"
-                                            className="badge-status-in-progress"
+                                            className="border-border-subtle text-[color:var(--text-secondary)]"
                                         >
                                             {sprint.name}
                                         </Badge>
                                     )}
-                                    <Badge variant="secondary">Modo board</Badge>
+                                    <Badge
+                                        variant="secondary"
+                                        className="border border-border-subtle bg-muted/35 text-[color:var(--text-secondary)]"
+                                    >
+                                        Modo board
+                                    </Badge>
                                 </div>
                                 <p className="text-sm text-muted-foreground">
                                     Arraste cartões entre listas para atualizar o fluxo
@@ -1690,7 +1745,7 @@ export default function SprintBoard({
                                         <Filter className="mr-2 h-4 w-4" />
                                         Filtrar
                                         {activeFilterCount > 0 && (
-                                            <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs">
+                                            <span className="ml-2 rounded-full border border-border-subtle bg-muted/35 px-2 py-0.5 text-xs text-[color:var(--text-secondary)]">
                                                 {activeFilterCount}
                                             </span>
                                         )}
@@ -1867,27 +1922,18 @@ export default function SprintBoard({
                     )}
 
                     <div className="flex flex-wrap items-center gap-2 text-xs">
-                        <Badge variant="secondary" className="px-2.5 py-1">
+                        <SummaryMetricBadge>
                             Itens: {totalItems}
-                        </Badge>
-                        <Badge
-                            variant="secondary"
-                            className="border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-blue-200"
-                        >
+                        </SummaryMetricBadge>
+                        <SummaryMetricBadge>
                             Em andamento: {inProgressCount}
-                        </Badge>
-                        <Badge
-                            variant="secondary"
-                            className="border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-amber-200"
-                        >
+                        </SummaryMetricBadge>
+                        <SummaryMetricBadge>
                             Bloqueados: {blockedCount}
-                        </Badge>
-                        <Badge
-                            variant="secondary"
-                            className="border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-emerald-200"
-                        >
+                        </SummaryMetricBadge>
+                        <SummaryMetricBadge quiet>
                             Concluídos: {doneCount}
-                        </Badge>
+                        </SummaryMetricBadge>
                         <span className="text-muted-foreground">
                             Atalhos: <kbd className="rounded bg-muted px-1.5 py-0.5">N</kbd>{' '}
                             novo • <kbd className="rounded bg-muted px-1.5 py-0.5">E</kbd>{' '}
@@ -1929,7 +1975,7 @@ export default function SprintBoard({
                                     <div className="text-xs text-muted-foreground">
                                         Aging WIP (max)
                                     </div>
-                                    <div className="text-2xl font-semibold text-blue-400">
+                                    <div className="text-2xl font-semibold text-[color:var(--text-primary)]">
                                         {flowMetrics.wip_aging.max_hours ===
                                         null
                                             ? '—'
@@ -1942,7 +1988,7 @@ export default function SprintBoard({
                                     <div className="text-xs text-muted-foreground">
                                         Aging blocked (max)
                                     </div>
-                                    <div className="text-2xl font-semibold text-amber-400">
+                                    <div className="text-2xl font-semibold text-[color:var(--text-secondary)]">
                                         {flowMetrics.blocked_aging.max_hours ===
                                         null
                                             ? '—'
@@ -1954,8 +2000,8 @@ export default function SprintBoard({
                     )}
 
                     {selectedItemIds.length > 0 && (
-                        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-xs shadow-sm">
-                            <span className="font-medium text-primary">
+                        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-[color:var(--focus-ring)]/35 bg-[color:var(--focus-background)] px-3 py-2 text-xs shadow-sm">
+                            <span className="font-medium text-[color:var(--text-primary)]">
                                 {selectedItemIds.length} selecionado(s)
                             </span>
                             <DropdownMenu>

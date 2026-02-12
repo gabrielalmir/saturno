@@ -1,6 +1,6 @@
-import ProfileController from './ProfileController'
-import PasswordController from './PasswordController'
 import OrganizationController from './OrganizationController'
+import PasswordController from './PasswordController'
+import ProfileController from './ProfileController'
 import ProjectController from './ProjectController'
 import TwoFactorAuthenticationController from './TwoFactorAuthenticationController'
 

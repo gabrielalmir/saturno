@@ -208,19 +208,27 @@
     }
 
     .badge-status-blocked {
-        @apply border-amber-500/30 bg-amber-500/10 text-amber-400;
+        border-color: color-mix(in srgb, var(--warning) 36%, transparent);
+        background: color-mix(in srgb, var(--warning) 14%, transparent);
+        color: var(--warning);
     }
 
     .badge-status-ready {
-        @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-400;
+        border-color: color-mix(in srgb, var(--border-subtle) 85%, transparent);
+        background: color-mix(in srgb, var(--bg-hover) 40%, transparent);
+        color: var(--text-secondary);
     }
 
     .badge-status-in-progress {
-        @apply border-blue-500/30 bg-blue-500/10 text-blue-400;
+        border-color: color-mix(in srgb, var(--border-subtle) 85%, transparent);
+        background: color-mix(in srgb, var(--bg-hover) 40%, transparent);
+        color: var(--text-secondary);
     }
 
     .badge-status-done {
-        @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-400;
+        border-color: color-mix(in srgb, var(--border-subtle) 80%, transparent);
+        background: color-mix(in srgb, var(--bg-hover) 30%, transparent);
+        color: var(--text-disabled);
     }
 
     .badge-priority-p0 {
@@ -240,11 +248,15 @@
     }
 
     .badge-status-backlog {
-        @apply border-slate-500/30 bg-slate-500/10 text-slate-400;
+        border-color: color-mix(in srgb, var(--border-subtle) 85%, transparent);
+        background: color-mix(in srgb, var(--bg-hover) 35%, transparent);
+        color: var(--text-secondary);
     }
 
     .badge-status-triage {
-        @apply border-purple-500/30 bg-purple-500/10 text-purple-400;
+        border-color: color-mix(in srgb, var(--border-subtle) 85%, transparent);
+        background: color-mix(in srgb, var(--bg-hover) 35%, transparent);
+        color: var(--text-tertiary);
     }
 
     .badge-status-cancelled {
