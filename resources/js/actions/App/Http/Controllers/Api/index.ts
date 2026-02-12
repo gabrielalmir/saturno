@@ -1,9 +1,9 @@
-import UserAvailabilityController from './UserAvailabilityController'
 import HolidayController from './HolidayController'
-import WorkItemAllocationController from './WorkItemAllocationController'
+import JiraImportController from './JiraImportController'
 import SprintCapacityController from './SprintCapacityController'
 import SprintN1ReservationController from './SprintN1ReservationController'
-import JiraImportController from './JiraImportController'
+import UserAvailabilityController from './UserAvailabilityController'
+import WorkItemAllocationController from './WorkItemAllocationController'
 
 const Api = {
     UserAvailabilityController: Object.assign(UserAvailabilityController, UserAvailabilityController),

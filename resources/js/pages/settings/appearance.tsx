@@ -25,7 +25,7 @@ export default function Appearance() {
                     <Heading
                         variant="small"
                         title="Configurações de aparência"
-                        description="Atualize as configurações de aparência da sua conta"
+                        description="A aplicação opera exclusivamente em dark mode para reduzir fadiga visual."
                     />
                     <AppearanceTabs />
                 </div>

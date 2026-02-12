@@ -11,7 +11,6 @@ import {
     Check,
     Plus,
     KeyRound,
-    Palette,
     Plug,
     Shield,
 } from 'lucide-react';
@@ -110,11 +109,6 @@ const navSections: NavSection[] = [
                 title: '2FA',
                 href: '/settings/two-factor',
                 icon: Shield,
-            },
-            {
-                title: 'Aparencia',
-                href: '/settings/appearance',
-                icon: Palette,
             },
             {
                 title: 'Capacidade',

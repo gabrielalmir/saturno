@@ -1,6 +1,6 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AssigneeChip } from '@/components/work-items/AssigneeChip';
+import { StatusBadge } from '@/components/work-items/StatusBadge';
+import { WorkItemDetailPanel } from '@/components/work-items/WorkItemDetailPanel';
 import { WorkItemFormDialog } from '@/components/work-items/WorkItemFormDialog';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, SharedData } from '@/types';
@@ -87,6 +91,15 @@ export default function WorkItemsPage({
     const [searchQuery, setSearchQuery] = useState(serverFilters?.q || '');
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [disciplineFilter, setDisciplineFilter] = useState('all');
+    const [focusedIndex, setFocusedIndex] = useState(0);
+    const [isFiltering, setIsFiltering] = useState(false);
+    const [detailPanelOpen, setDetailPanelOpen] = useState(false);
+    const [detailPanelItem, setDetailPanelItem] = useState<WorkItem | null>(
+        null,
+    );
+    const [recentlyUpdatedItemId, setRecentlyUpdatedItemId] = useState<
+        number | null
+    >(null);
     const [tierFilter, setTierFilter] = useState<TierFilter>(
         asTierFilter(serverFilters?.tier),
     );
@@ -94,9 +107,12 @@ export default function WorkItemsPage({
         asStatusFilter(serverFilters?.status),
     );
 
-    const workItemsData: WorkItem[] = Array.isArray(workItems)
-        ? workItems
-        : (workItems?.data ?? []);
+    const initialWorkItemsData = useMemo<WorkItem[]>(
+        () => (Array.isArray(workItems) ? workItems : (workItems?.data ?? [])),
+        [workItems],
+    );
+    const [workItemsData, setWorkItemsData] =
+        useState<WorkItem[]>(initialWorkItemsData);
 
     const filteredItems = useMemo(() => {
         const query = searchQuery.trim().toLowerCase();
@@ -128,7 +144,62 @@ export default function WorkItemsPage({
         workItemsData,
     ]);
 
+    useEffect(() => {
+        setWorkItemsData(initialWorkItemsData);
+    }, [initialWorkItemsData]);
+
     const disciplineOptions = ['developer', 'qa', 'infra', 'security'];
+
+    useEffect(() => {
+        setIsFiltering(true);
+        const timeoutId = window.setTimeout(() => setIsFiltering(false), 140);
+        return () => window.clearTimeout(timeoutId);
+    }, [searchQuery, tierFilter, statusFilter, disciplineFilter]);
+
+    useEffect(() => {
+        setFocusedIndex((prev) =>
+            filteredItems.length === 0
+                ? 0
+                : Math.min(prev, filteredItems.length - 1),
+        );
+    }, [filteredItems.length]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            const target = event.target as HTMLElement | null;
+            const isTyping =
+                !!target &&
+                (target.tagName === 'INPUT' ||
+                    target.tagName === 'TEXTAREA' ||
+                    target.tagName === 'SELECT' ||
+                    target.isContentEditable);
+
+            if (isTyping || filteredItems.length === 0) return;
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                setFocusedIndex((prev) =>
+                    Math.min(prev + 1, filteredItems.length - 1),
+                );
+            }
+
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                setFocusedIndex((prev) => Math.max(prev - 1, 0));
+            }
+
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const current = filteredItems[focusedIndex];
+                if (!current) return;
+                setDetailPanelItem(current);
+                setDetailPanelOpen(true);
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [filteredItems, focusedIndex]);
 
     const contextLabels = [
         serverFilters?.sprint_id ? `Sprint: ${serverFilters.sprint_id}` : null,
@@ -140,6 +211,58 @@ export default function WorkItemsPage({
             ? `Responsável: ${serverFilters.assignee_id}`
             : null,
     ].filter(Boolean) as string[];
+
+    const handleQuickPanelUpdate = (
+        workItemId: number,
+        payload: { assignee_id?: number | null; priority?: string; status?: string },
+    ) => {
+        const nextAssignee =
+            payload.assignee_id === null
+                ? undefined
+                : users.find((user) => user.id === payload.assignee_id);
+        setWorkItemsData((prev) =>
+            prev.map((item) =>
+                item.id === workItemId
+                    ? {
+                          ...item,
+                          assignee_id:
+                              payload.assignee_id === null
+                                  ? undefined
+                                  : payload.assignee_id,
+                          assignee:
+                              payload.assignee_id === null
+                                  ? undefined
+                                  : nextAssignee ?? item.assignee,
+                          priority: payload.priority ?? item.priority,
+                          status: payload.status ?? item.status,
+                      }
+                    : item,
+            ),
+        );
+        setDetailPanelItem((prev) =>
+            prev && prev.id === workItemId
+                ? {
+                      ...prev,
+                      assignee_id:
+                          payload.assignee_id === null
+                              ? undefined
+                              : payload.assignee_id,
+                      assignee:
+                          payload.assignee_id === null
+                              ? undefined
+                              : nextAssignee ?? prev.assignee,
+                      priority: payload.priority ?? prev.priority,
+                      status: payload.status ?? prev.status,
+                  }
+                : prev,
+        );
+        setRecentlyUpdatedItemId(workItemId);
+        window.setTimeout(() => setRecentlyUpdatedItemId(null), 1400);
+        router.put(`/work-items/${workItemId}`, payload, {
+            preserveScroll: true,
+            preserveState: true,
+        });
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -256,7 +379,20 @@ export default function WorkItemsPage({
                     </Button>
                 </div>
 
-                {filteredItems.length === 0 ? (
+                {isFiltering ? (
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {Array.from({ length: 6 }).map((_, idx) => (
+                            <Card key={idx}>
+                                <CardContent className="space-y-3 p-4">
+                                    <Skeleton className="h-5 w-3/4" />
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-2/3" />
+                                    <Skeleton className="h-8 w-full" />
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                ) : filteredItems.length === 0 ? (
                     <Card>
                         <CardContent className="p-10 text-center text-muted-foreground">
                             Nenhum item encontrado.
@@ -264,10 +400,15 @@ export default function WorkItemsPage({
                     </Card>
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {filteredItems.map((item) => (
+                        {filteredItems.map((item, index) => (
                             <Card
                                 key={item.id}
-                                className="transition-colors hover:border-primary/30"
+                                className={`cursor-pointer transition-colors hover:border-primary/30 ${focusedIndex === index ? 'ring-2 ring-primary/50' : ''} ${recentlyUpdatedItemId === item.id ? 'border-primary/60 bg-accent/20' : ''}`}
+                                onClick={() => {
+                                    setFocusedIndex(index);
+                                    setDetailPanelItem(item);
+                                    setDetailPanelOpen(true);
+                                }}
                             >
                                 <CardHeader className="pb-3">
                                     <CardTitle className="flex items-center justify-between text-base">
@@ -286,20 +427,9 @@ export default function WorkItemsPage({
                                     <p className="line-clamp-2 text-sm text-muted-foreground">
                                         {item.description || 'Sem descricao'}
                                     </p>
-                                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                        <span>Status: {item.status}</span>
-                                        <span className="flex items-center gap-2">
-                                            {item.assignee?.name ||
-                                                'Sem responsavel'}
-                                            {item.assignee?.analyst_role && (
-                                                <Badge
-                                                    variant="outline"
-                                                    className="text-[10px]"
-                                                >
-                                                    {item.assignee.analyst_role}
-                                                </Badge>
-                                            )}
-                                        </span>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <StatusBadge status={item.status} />
+                                        <AssigneeChip user={item.assignee} />
                                     </div>
                                     {(item.ticket_id || item.epic_id) && (
                                         <div className="flex flex-wrap gap-2 text-xs">
@@ -321,12 +451,10 @@ export default function WorkItemsPage({
                                             )}
                                         </div>
                                     )}
-                                    <Link
-                                        href={`/work-items/${item.id}`}
-                                        className="text-xs text-primary"
-                                    >
-                                        Ver detalhes
-                                    </Link>
+                                    <div className="text-text-tertiary text-xs">
+                                        Enter: abrir painel • Cmd/Ctrl+K:
+                                        comando rápido
+                                    </div>
                                 </CardContent>
                             </Card>
                         ))}
@@ -339,6 +467,14 @@ export default function WorkItemsPage({
                 onOpenChange={setCreateDialogOpen}
                 users={users}
                 epics={epics}
+            />
+            <WorkItemDetailPanel
+                key={detailPanelItem?.id ?? 'work-item-panel'}
+                open={detailPanelOpen}
+                onOpenChange={setDetailPanelOpen}
+                workItem={detailPanelItem}
+                users={users}
+                onQuickUpdate={handleQuickPanelUpdate}
             />
         </AppLayout>
     );

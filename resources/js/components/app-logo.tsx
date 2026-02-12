@@ -4,21 +4,21 @@ import AppLogoIcon from './app-logo-icon';
 export default function AppLogo() {
     return (
         <>
-            <div className="flex aspect-square size-8 items-center justify-center rounded-md overflow-hidden shadow-lg">
-                <AppLogoIcon className="h-full w-full object-cover" />
+            <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-md border border-border-subtle bg-surface p-1 text-text-primary shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
+                <AppLogoIcon className="h-full w-full" />
             </div>
             <div className="ml-1 grid flex-1 text-left text-sm">
                 <div className="mb-0.5 flex items-center gap-2 leading-tight">
-                    <span className="truncate bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text font-semibold text-transparent">
+                    <span className="truncate font-semibold text-text-primary">
                         Saturno
                     </span>
-                    <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px]">
-                        <AnimatedShinyText className="text-[10px]">
+                    <span className="rounded-full border border-border-subtle bg-muted/40 px-2 py-0.5 text-[10px] text-text-secondary">
+                        <AnimatedShinyText className="text-[10px] text-text-secondary">
                             v1
                         </AnimatedShinyText>
                     </span>
                 </div>
-                <span className="truncate text-[10px] text-muted-foreground">
+                <span className="truncate text-[10px] text-text-tertiary">
                     Gestão de Sprints
                 </span>
             </div>
