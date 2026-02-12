@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { cn, toUrl } from '@/lib/utils';
-import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editOrganization } from '@/routes/organization';
 import { edit } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
@@ -31,11 +30,6 @@ const sidebarNavItems: NavItem[] = [
     {
         title: 'Organizacao',
         href: editOrganization(),
-        icon: null,
-    },
-    {
-        title: 'Aparencia',
-        href: editAppearance(),
         icon: null,
     },
     {

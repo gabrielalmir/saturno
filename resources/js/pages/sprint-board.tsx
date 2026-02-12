@@ -61,6 +61,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { BlockedReasonDialog } from '@/components/work-items/BlockedReasonDialog';
+import { WorkItemDetailPanel } from '@/components/work-items/WorkItemDetailPanel';
 import { WorkItemFormDialog } from '@/components/work-items/WorkItemFormDialog';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
@@ -141,13 +142,19 @@ interface SortableCardProps {
     item: WorkItem;
     isDragging?: boolean;
     isSelected?: boolean;
+    isUpdated?: boolean;
     onSelect?: (
         item: WorkItem,
         event: React.MouseEvent | React.KeyboardEvent,
     ) => void;
 }
 
-function SortableCard({ item, isSelected, onSelect }: SortableCardProps) {
+function SortableCard({
+    item,
+    isSelected,
+    isUpdated,
+    onSelect,
+}: SortableCardProps) {
     const {
         attributes,
         listeners,
@@ -171,6 +178,7 @@ function SortableCard({ item, isSelected, onSelect }: SortableCardProps) {
             <WorkItemCard
                 item={item}
                 isSelected={isSelected}
+                isUpdated={isUpdated}
                 onSelect={onSelect}
             />
         </div>
@@ -180,10 +188,12 @@ function SortableCard({ item, isSelected, onSelect }: SortableCardProps) {
 function WorkItemCard({
     item,
     isSelected,
+    isUpdated,
     onSelect,
 }: {
     item: WorkItem;
     isSelected?: boolean;
+    isUpdated?: boolean;
     onSelect?: (
         item: WorkItem,
         event: React.MouseEvent | React.KeyboardEvent,
@@ -203,7 +213,7 @@ function WorkItemCard({
 
     return (
         <Card
-            className={`group cursor-grab rounded-xl border border-border/60 bg-card/95 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg active:cursor-grabbing ${isSelected ? 'ring-2 ring-primary/60' : ''}`}
+            className={`group cursor-grab rounded-xl border border-border/60 bg-card/95 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg active:cursor-grabbing ${isSelected ? 'ring-2 ring-primary/60' : ''} ${isUpdated ? 'border-primary/60 bg-accent/20' : ''}`}
             role="button"
             tabIndex={0}
             onClick={(event) => onSelect?.(item, event)}
@@ -324,6 +334,7 @@ interface DroppableColumnProps {
     items: WorkItem[];
     wipLimit?: number;
     selectedItemIds?: number[];
+    recentlyUpdatedItemId?: number | null;
     onSelectItem?: (
         item: WorkItem,
         event: React.MouseEvent | React.KeyboardEvent,
@@ -342,6 +353,7 @@ function DroppableColumn({
     items,
     wipLimit,
     selectedItemIds = [],
+    recentlyUpdatedItemId,
     onSelectItem,
     onUpdateColumn,
     onDeleteColumn,
@@ -538,12 +550,13 @@ function DroppableColumn({
                                     </div>
                                 )}
                                 <SortableCard
-                                    item={item}
-                                    isSelected={selectedItemIds?.includes(
-                                        item.id,
-                                    )}
-                                    onSelect={onSelectItem}
-                                />
+                                item={item}
+                                isSelected={selectedItemIds?.includes(
+                                    item.id,
+                                )}
+                                isUpdated={recentlyUpdatedItemId === item.id}
+                                onSelect={onSelectItem}
+                            />
                             </div>
                         );
                     })}
@@ -605,6 +618,16 @@ export default function SprintBoard({
     const [editItem, setEditItem] = useState<WorkItem | null>(null);
     const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
     const [selectedItemIds, setSelectedItemIds] = useState<number[]>([]);
+    const [selectionAnchorId, setSelectionAnchorId] = useState<number | null>(
+        null,
+    );
+    const [detailPanelOpen, setDetailPanelOpen] = useState(false);
+    const [detailPanelItem, setDetailPanelItem] = useState<WorkItem | null>(
+        null,
+    );
+    const [recentlyUpdatedItemId, setRecentlyUpdatedItemId] = useState<
+        number | null
+    >(null);
     const [boardError, setBoardError] = useState<string | null>(null);
     const [preMutationColumns, setPreMutationColumns] = useState<
         BoardColumn[] | null
@@ -794,19 +817,43 @@ export default function SprintBoard({
         [columnsData],
     );
 
+    const orderedVisibleItemIds = columnsData
+        .flatMap((column) => column.items || [])
+        .map((item) => item.id);
+
     const handleSelectItem = (
         item: WorkItem,
         event: React.MouseEvent | React.KeyboardEvent,
     ) => {
+        const isShift = 'shiftKey' in event ? event.shiftKey : false;
         const isMulti =
             'metaKey' in event ? event.metaKey || event.ctrlKey : false;
         setSelectedItemId(item.id);
 
+        if (isShift && selectionAnchorId) {
+            const anchorIndex = orderedVisibleItemIds.indexOf(selectionAnchorId);
+            const currentIndex = orderedVisibleItemIds.indexOf(item.id);
+
+            if (anchorIndex !== -1 && currentIndex !== -1) {
+                const [start, end] =
+                    anchorIndex < currentIndex
+                        ? [anchorIndex, currentIndex]
+                        : [currentIndex, anchorIndex];
+                const range = orderedVisibleItemIds.slice(start, end + 1);
+                setSelectedItemIds(range);
+                return;
+            }
+        }
+
         if (!isMulti) {
             setSelectedItemIds([item.id]);
+            setSelectionAnchorId(item.id);
+            setDetailPanelItem(item);
+            setDetailPanelOpen(true);
             return;
         }
 
+        setSelectionAnchorId(item.id);
         setSelectedItemIds((prev) =>
             prev.includes(item.id)
                 ? prev.filter((id) => id !== item.id)
@@ -817,6 +864,7 @@ export default function SprintBoard({
     const clearSelection = () => {
         setSelectedItemIds([]);
         setSelectedItemId(null);
+        setSelectionAnchorId(null);
     };
 
     const findItemColumn = (itemId: number) => {
@@ -1183,6 +1231,12 @@ export default function SprintBoard({
                 event.preventDefault();
                 moveItemToDone(selectedItem);
             }
+
+            if (key === 'o' && selectedItem) {
+                event.preventDefault();
+                setDetailPanelItem(selectedItem);
+                setDetailPanelOpen(true);
+            }
         };
 
         document.addEventListener('keydown', handleKeyDown);
@@ -1523,6 +1577,64 @@ export default function SprintBoard({
         }
     };
 
+    const handleQuickPanelUpdate = (
+        workItemId: number,
+        payload: { assignee_id?: number | null; priority?: string },
+    ) => {
+        const nextAssignee =
+            payload.assignee_id === null
+                ? undefined
+                : (users || []).find((user) => user.id === payload.assignee_id);
+
+        setColumnsData((prev) =>
+            prev.map((column) => ({
+                ...column,
+                items: column.items.map((item) =>
+                    item.id === workItemId
+                        ? {
+                              ...item,
+                              assignee_id:
+                                  payload.assignee_id === null
+                                      ? undefined
+                                      : payload.assignee_id,
+                              assignee: payload.assignee_id === null
+                                  ? undefined
+                                  : nextAssignee ?? item.assignee,
+                              priority: payload.priority ?? item.priority,
+                          }
+                        : item,
+                ),
+            })),
+        );
+        setDetailPanelItem((prev) =>
+            prev && prev.id === workItemId
+                ? {
+                      ...prev,
+                      assignee_id:
+                          payload.assignee_id === null
+                              ? undefined
+                              : payload.assignee_id,
+                      assignee:
+                          payload.assignee_id === null
+                              ? undefined
+                              : nextAssignee ?? prev.assignee,
+                      priority: payload.priority ?? prev.priority,
+                  }
+                : prev,
+        );
+
+        setRecentlyUpdatedItemId(workItemId);
+        window.setTimeout(() => setRecentlyUpdatedItemId(null), 1400);
+
+        router.put(`/work-items/${workItemId}`, payload, {
+            preserveScroll: true,
+            preserveState: true,
+            onError: () => {
+                setBoardError('Não foi possível atualizar o item no painel.');
+            },
+        });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={board?.name || 'Board'} />
@@ -1780,8 +1892,10 @@ export default function SprintBoard({
                             Atalhos: <kbd className="rounded bg-muted px-1.5 py-0.5">N</kbd>{' '}
                             novo • <kbd className="rounded bg-muted px-1.5 py-0.5">E</kbd>{' '}
                             editar • <kbd className="rounded bg-muted px-1.5 py-0.5">D</kbd>{' '}
-                            concluir • <kbd className="rounded bg-muted px-1.5 py-0.5">/</kbd>{' '}
-                            buscar
+                            concluir • <kbd className="rounded bg-muted px-1.5 py-0.5">O</kbd>{' '}
+                            painel • <kbd className="rounded bg-muted px-1.5 py-0.5">/</kbd>{' '}
+                            buscar • <kbd className="rounded bg-muted px-1.5 py-0.5">Shift</kbd>{' '}
+                            seleção em faixa
                         </span>
                     </div>
 
@@ -1896,6 +2010,21 @@ export default function SprintBoard({
                                 </DropdownMenuContent>
                             </DropdownMenu>
                             <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    const item = selectedItemId
+                                        ? findItemById(selectedItemId)
+                                        : null;
+                                    if (!item) return;
+                                    setDetailPanelItem(item);
+                                    setDetailPanelOpen(true);
+                                }}
+                                disabled={!selectedItemId}
+                            >
+                                Painel lateral
+                            </Button>
+                            <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={clearSelection}
@@ -1922,6 +2051,9 @@ export default function SprintBoard({
                                                 : undefined
                                         }
                                         selectedItemIds={selectedItemIds}
+                                        recentlyUpdatedItemId={
+                                            recentlyUpdatedItemId
+                                        }
                                         onSelectItem={handleSelectItem}
                                         onUpdateColumn={handleUpdateColumn}
                                         onDeleteColumn={confirmDeleteColumn}
@@ -2112,6 +2244,15 @@ export default function SprintBoard({
                 sprintId={sprint?.id}
                 users={users}
                 epics={epics}
+            />
+            <WorkItemDetailPanel
+                key={detailPanelItem?.id ?? 'board-item-panel'}
+                open={detailPanelOpen}
+                onOpenChange={setDetailPanelOpen}
+                workItem={detailPanelItem}
+                users={users}
+                allowStatusEdit={false}
+                onQuickUpdate={handleQuickPanelUpdate}
             />
 
             <BlockedReasonDialog
