@@ -376,3 +376,117 @@ h3 {
 .theme-toggle-btn.active {
 	box-shadow: 0 0 0 1px rgba(94, 106, 210, 0.4);
 }
+
+/* Search modal - estrutura, espaçamento e tema */
+#starlight__search {
+	--pagefind-ui-background: var(--docs-panel-bg);
+	--pagefind-ui-border: var(--docs-panel-border);
+	--pagefind-ui-text: var(--sl-color-gray-1);
+	--pagefind-ui-primary: var(--sl-color-accent);
+	width: 100%;
+	min-width: 0;
+}
+
+#starlight__search .pagefind-ui__form {
+	position: relative;
+	overflow: visible;
+	margin-bottom: 0.5rem;
+}
+
+#starlight__search .pagefind-ui__search-input {
+	padding-inline-start: 2.75rem !important;
+	padding-inline-end: 5.5rem !important;
+	background-color: var(--docs-panel-bg) !important;
+	border-color: var(--docs-panel-border) !important;
+	color: var(--sl-color-gray-1) !important;
+	min-width: 0;
+}
+
+#starlight__search .pagefind-ui__search-input::placeholder {
+	color: var(--sl-color-gray-4);
+	opacity: 0.8;
+}
+
+#starlight__search .pagefind-ui__search-clear {
+	background-color: transparent !important;
+	color: var(--sl-color-gray-2) !important;
+}
+
+#starlight__search .pagefind-ui__search-clear:hover {
+	background-color: var(--docs-hover-bg) !important;
+	color: var(--sl-color-gray-1) !important;
+}
+
+#starlight__search .pagefind-ui__form::before {
+	background-color: var(--sl-color-gray-4) !important;
+	opacity: 0.8;
+}
+
+#starlight__search .pagefind-ui__result-title,
+#starlight__search .pagefind-ui__result-nested {
+	background: var(--docs-panel-bg) !important;
+	border-color: var(--docs-panel-border) !important;
+	padding: 0.75rem 1rem !important;
+	border-radius: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+#starlight__search .pagefind-ui__result-link {
+	color: var(--sl-color-gray-1) !important;
+	line-height: 1.4;
+}
+
+#starlight__search .pagefind-ui__result-excerpt {
+	color: var(--sl-color-gray-3) !important;
+	line-height: 1.5;
+	margin-top: 0.25rem;
+	word-break: break-word;
+	overflow-wrap: break-word;
+}
+
+#starlight__search mark {
+	background: color-mix(in oklab, var(--sl-color-accent) 28%, transparent) !important;
+	color: var(--sl-color-gray-1) !important;
+	padding: 0.12rem 0.28rem !important;
+	border-radius: 0.25rem;
+}
+
+#starlight__search .pagefind-ui__message {
+	color: var(--sl-color-gray-2) !important;
+	padding: 0.5rem 0 !important;
+}
+
+#starlight__search .pagefind-ui__results-area {
+	padding-inline: 0.25rem;
+	margin-top: 1rem;
+}
+
+#starlight__search .pagefind-ui__results {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+[data-search-modal-open] dialog {
+	background: var(--sl-color-bg);
+	border-color: var(--sl-color-hairline);
+}
+
+[data-search-modal-open] .search-modal-title {
+	color: var(--sl-color-gray-1);
+}
+
+[data-search-modal-open] .search-modal-subtitle {
+	color: var(--sl-color-gray-4);
+}
+
+[data-search-modal-open] .close-modal-btn {
+	background: var(--sl-color-bg);
+	border-color: var(--sl-color-hairline);
+	color: var(--sl-color-gray-2);
+}
+
+[data-search-modal-open] .close-modal-btn:hover {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-gray-1);
+}

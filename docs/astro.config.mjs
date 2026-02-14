@@ -15,7 +15,7 @@ export default defineConfig({
 		tailwind(),
 		starlight({
 			title: 'Saturno',
-			customCss: ['./src/styles/starlight-landing.css'],
+			customCss: ['./src/styles/starlight-landing.css', './src/styles/search-overrides.css'],
 			components: {
 				SiteTitle: './src/components/starlight/SiteTitle.astro',
 				Search: './src/components/starlight/Search.astro',
