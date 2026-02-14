@@ -26,6 +26,8 @@ class TeamEventController extends Controller
 
     public function store(Request $request)
     {
+        $this->ensureManager($request);
+
         $orgId = $request->user()->current_organization_id;
         $validated = $request->validate([
             'team_id' => 'required|exists:teams,id',
@@ -43,6 +45,8 @@ class TeamEventController extends Controller
 
     public function update(Request $request, TeamEvent $event)
     {
+        $this->ensureManager($request);
+
         if ($event->organization_id !== $request->user()->current_organization_id) {
             abort(403);
         }
@@ -62,6 +66,8 @@ class TeamEventController extends Controller
 
     public function destroy(Request $request, TeamEvent $event)
     {
+        $this->ensureManager($request);
+
         if ($event->organization_id !== $request->user()->current_organization_id) {
             abort(403);
         }
@@ -69,5 +75,12 @@ class TeamEventController extends Controller
         $event->delete();
 
         return redirect()->back();
+    }
+
+    private function ensureManager(Request $request): void
+    {
+        if (! in_array($request->user()->currentOrganizationRole(), ['admin', 'maintainer'], true)) {
+            abort(403);
+        }
     }
 }

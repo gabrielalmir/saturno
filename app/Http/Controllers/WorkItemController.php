@@ -13,6 +13,7 @@ use App\Modules\WorkManagement\Domain\Exceptions\MissingBlockedReason;
 use App\Modules\WorkManagement\Domain\Exceptions\MissingEstimateForN2;
 use App\Modules\WorkManagement\Domain\Exceptions\WipLimitExceeded;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use InvalidArgumentException;
@@ -52,25 +53,42 @@ class WorkItemController extends Controller
     {
         $orgId = $request->user()->current_organization_id;
         $projectId = $request->user()->current_project_id;
+
+        $existsInScope = function (string $table) use ($orgId, $projectId) {
+            return Rule::exists($table, 'id')->where(function ($query) use ($orgId, $projectId) {
+                $query->where('organization_id', $orgId);
+
+                if ($projectId) {
+                    $query->where('project_id', $projectId);
+                } else {
+                    $query->whereNull('project_id');
+                }
+            });
+        };
+
         $validated = $request->validate([
-            'team_id' => 'required|exists:teams,id',
-            'parent_id' => 'nullable|exists:work_items,id',
-            'sprint_id' => 'nullable|exists:sprints,id',
-            'assignee_id' => 'nullable|exists:users,id',
-            'reporter_id' => 'nullable|exists:users,id',
+            'team_id' => ['required', $existsInScope('teams')],
+            'parent_id' => ['nullable', $existsInScope('work_items')],
+            'sprint_id' => ['nullable', $existsInScope('sprints')],
+            'assignee_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('organization_user', 'user_id')->where(fn ($query) => $query->where('organization_id', $orgId)),
+            ],
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'type' => 'nullable|string',
-            'priority' => 'nullable|string',
-            'status' => 'nullable|string',
+            'type' => 'required|string|max:50',
+            'priority' => 'required|string|max:10',
+            'status' => 'nullable|in:backlog,ready',
             'estimate' => 'nullable|integer|min:0',
-            'tier' => 'sometimes|string',
+            'tier' => 'required|in:N1,N2',
             'jira_key' => 'nullable|string|max:50',
-            'ticket_id' => 'nullable|exists:tickets,id',
+            'ticket_id' => ['nullable', $existsInScope('tickets')],
         ]);
 
         $validated['organization_id'] = $orgId;
         $validated['project_id'] = $projectId;
+        $validated['reporter_id'] = (int) $request->user()->id;
 
         $workItem = WorkItem::create($validated);
 
@@ -92,12 +110,29 @@ class WorkItemController extends Controller
     {
         $this->authorizeOrg($request, $workItem->organization_id, $workItem->project_id);
 
+        $orgId = (int) $workItem->organization_id;
+        $projectId = $workItem->project_id !== null ? (int) $workItem->project_id : null;
+        $existsInScope = function (string $table) use ($orgId, $projectId) {
+            return Rule::exists($table, 'id')->where(function ($query) use ($orgId, $projectId) {
+                $query->where('organization_id', $orgId);
+
+                if ($projectId) {
+                    $query->where('project_id', $projectId);
+                } else {
+                    $query->whereNull('project_id');
+                }
+            });
+        };
+
         $validated = $request->validate([
-            'team_id' => 'sometimes|exists:teams,id',
-            'parent_id' => 'nullable|exists:work_items,id',
-            'sprint_id' => 'nullable|exists:sprints,id',
-            'assignee_id' => 'nullable|exists:users,id',
-            'reporter_id' => 'nullable|exists:users,id',
+            'team_id' => ['sometimes', $existsInScope('teams')],
+            'parent_id' => ['nullable', $existsInScope('work_items')],
+            'sprint_id' => ['nullable', $existsInScope('sprints')],
+            'assignee_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('organization_user', 'user_id')->where(fn ($query) => $query->where('organization_id', $orgId)),
+            ],
             'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
             'type' => 'nullable|string',
@@ -112,7 +147,7 @@ class WorkItemController extends Controller
             'due_date' => 'nullable|date',
             'planned_for' => 'nullable|date',
             'jira_key' => 'nullable|string|max:50',
-            'ticket_id' => 'nullable|exists:tickets,id',
+            'ticket_id' => ['nullable', $existsInScope('tickets')],
         ]);
 
         // Apply workflow rules for status transitions (WIP limit, invalid jumps, required fields, etc.).

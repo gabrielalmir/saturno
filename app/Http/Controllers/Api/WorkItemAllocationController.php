@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\WorkItem;
 use App\Models\WorkItemAllocation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WorkItemAllocationController extends Controller
 {
-    public function index(WorkItem $workItem)
+    public function index(Request $request, WorkItem $workItem)
     {
+        $this->authorizeWorkItemScope($request, $workItem);
+
         $allocations = $workItem->allocations()
             ->with('user:id,name,email')
             ->get();
@@ -20,10 +23,20 @@ class WorkItemAllocationController extends Controller
 
     public function store(Request $request, WorkItem $workItem)
     {
+        $this->authorizeWorkItemScope($request, $workItem);
+
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'allocation_percentage' => 'required|integer|min:1|max:100',
         ]);
+
+        $isOrgMember = DB::table('organization_user')
+            ->where('organization_id', $workItem->organization_id)
+            ->where('user_id', (int) $validated['user_id'])
+            ->exists();
+        if (! $isOrgMember) {
+            abort(422, 'Usuario nao pertence a organizacao atual.');
+        }
 
         // Check if allocation already exists
         $existing = WorkItemAllocation::where('work_item_id', $workItem->id)
@@ -47,6 +60,8 @@ class WorkItemAllocationController extends Controller
 
     public function update(Request $request, WorkItem $workItem, $userId)
     {
+        $this->authorizeWorkItemScope($request, $workItem);
+
         $validated = $request->validate([
             'allocation_percentage' => 'required|integer|min:1|max:100',
         ]);
@@ -62,6 +77,8 @@ class WorkItemAllocationController extends Controller
 
     public function destroy(WorkItem $workItem, $userId)
     {
+        $this->authorizeWorkItemScope(request(), $workItem);
+
         $allocation = WorkItemAllocation::where('work_item_id', $workItem->id)
             ->where('user_id', $userId)
             ->firstOrFail();
@@ -69,5 +86,18 @@ class WorkItemAllocationController extends Controller
         $allocation->delete();
 
         return response()->json(null, 204);
+    }
+
+    private function authorizeWorkItemScope(Request $request, WorkItem $workItem): void
+    {
+        $user = $request->user();
+
+        if ((int) $workItem->organization_id !== (int) $user->current_organization_id) {
+            abort(404);
+        }
+
+        if ($user->current_project_id && (int) $workItem->project_id !== (int) $user->current_project_id) {
+            abort(404);
+        }
     }
 }

@@ -21,7 +21,7 @@ class SprintService
         }
 
         // Must have items
-        $items = WorkItem::where('sprint_id', $sprint->id)->get();
+        $items = $this->sprintWorkItemsQuery($sprint)->get();
         if ($items->isEmpty()) {
             throw ValidationException::withMessages(['start' => 'Não é possível iniciar sprint sem itens de trabalho.']);
         }
@@ -52,12 +52,12 @@ class SprintService
             throw ValidationException::withMessages(['complete' => 'Apenas sprints ativas podem ser encerradas.']);
         }
 
-        $items = WorkItem::where('sprint_id', $sprint->id)->get();
+        $items = $this->sprintWorkItemsQuery($sprint)->get();
         $doneCount = $items->where('status', 'done')->count();
         $totalCount = $items->count();
 
         // carry over incomplete
-        WorkItem::where('sprint_id', $sprint->id)
+        $this->sprintWorkItemsQuery($sprint)
             ->whereNotIn('status', ['done'])
             ->update(['sprint_id' => null, 'status' => 'backlog']);
 
@@ -70,5 +70,16 @@ class SprintService
             'done' => $doneCount,
             'total' => $totalCount,
         ];
+    }
+
+    private function sprintWorkItemsQuery(Sprint $sprint)
+    {
+        return WorkItem::query()
+            ->where('sprint_id', $sprint->id)
+            ->where('organization_id', $sprint->organization_id)
+            ->when($sprint->project_id !== null,
+                fn ($query) => $query->where('project_id', $sprint->project_id),
+                fn ($query) => $query->whereNull('project_id')
+            );
     }
 }

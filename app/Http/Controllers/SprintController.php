@@ -278,6 +278,11 @@ class SprintController extends Controller
             abort(403);
         }
 
+        $role = $user->currentOrganizationRole();
+        if (! in_array($role, ['admin', 'maintainer'], true)) {
+            abort(403, 'Apenas administradores e mantenedores podem iniciar sprints.');
+        }
+
         if ($sprint->status === 'active') {
             return redirect()->back()->withErrors([
                 'start' => 'Esta sprint já está ativa.',

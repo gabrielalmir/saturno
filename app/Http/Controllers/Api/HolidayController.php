@@ -29,6 +29,8 @@ class HolidayController extends Controller
 
     public function store(Request $request)
     {
+        $this->ensureManager($request);
+
         $validated = $request->validate([
             'date' => 'required|date',
             'name' => 'required|string|max:255',
@@ -44,6 +46,12 @@ class HolidayController extends Controller
 
     public function update(Request $request, Holiday $holiday)
     {
+        $this->ensureManager($request);
+
+        if ((int) $holiday->organization_id !== (int) $request->user()->current_organization_id) {
+            abort(404);
+        }
+
         $validated = $request->validate([
             'date' => 'sometimes|date',
             'name' => 'sometimes|string|max:255',
@@ -57,8 +65,22 @@ class HolidayController extends Controller
 
     public function destroy(Holiday $holiday)
     {
+        $request = request();
+        $this->ensureManager($request);
+
+        if ((int) $holiday->organization_id !== (int) $request->user()->current_organization_id) {
+            abort(404);
+        }
+
         $holiday->delete();
 
         return response()->json(null, 204);
+    }
+
+    private function ensureManager(Request $request): void
+    {
+        if (! in_array($request->user()->currentOrganizationRole(), ['admin', 'maintainer'], true)) {
+            abort(403);
+        }
     }
 }

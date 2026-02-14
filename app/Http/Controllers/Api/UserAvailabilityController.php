@@ -5,18 +5,26 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\UserAvailability;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserAvailabilityController extends Controller
 {
     public function index(Request $request)
     {
+        $actor = $request->user();
         $orgId = $request->user()->current_organization_id;
+        $canManageAll = in_array($actor->currentOrganizationRole(), ['admin', 'maintainer'], true);
 
         $query = UserAvailability::where('organization_id', $orgId)
             ->with('user:id,name,email');
 
         if ($request->has('user_id')) {
-            $query->where('user_id', $request->user_id);
+            $requestedUserId = (int) $request->user_id;
+            if (! $canManageAll && $requestedUserId !== (int) $actor->id) {
+                abort(403);
+            }
+
+            $query->where('user_id', $requestedUserId);
         }
 
         if ($request->has('start_date')) {
@@ -34,6 +42,10 @@ class UserAvailabilityController extends Controller
 
     public function store(Request $request)
     {
+        $actor = $request->user();
+        $orgId = (int) $actor->current_organization_id;
+        $canManageAll = in_array($actor->currentOrganizationRole(), ['admin', 'maintainer'], true);
+
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'start_date' => 'required|date',
@@ -42,7 +54,20 @@ class UserAvailabilityController extends Controller
             'reason' => 'nullable|string|max:255',
         ]);
 
-        $validated['organization_id'] = $request->user()->current_organization_id;
+        $targetUserId = (int) $validated['user_id'];
+        $isOrgMember = DB::table('organization_user')
+            ->where('organization_id', $orgId)
+            ->where('user_id', $targetUserId)
+            ->exists();
+        if (! $isOrgMember) {
+            abort(422, 'Usuario nao pertence a organizacao atual.');
+        }
+
+        if (! $canManageAll && $targetUserId !== (int) $actor->id) {
+            abort(403);
+        }
+
+        $validated['organization_id'] = $orgId;
 
         $availability = UserAvailability::create($validated);
 
@@ -51,6 +76,18 @@ class UserAvailabilityController extends Controller
 
     public function update(Request $request, UserAvailability $availability)
     {
+        $actor = $request->user();
+        $orgId = (int) $actor->current_organization_id;
+        $canManageAll = in_array($actor->currentOrganizationRole(), ['admin', 'maintainer'], true);
+
+        if ((int) $availability->organization_id !== $orgId) {
+            abort(404);
+        }
+
+        if (! $canManageAll && (int) $availability->user_id !== (int) $actor->id) {
+            abort(403);
+        }
+
         $validated = $request->validate([
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date|after_or_equal:start_date',
@@ -65,6 +102,18 @@ class UserAvailabilityController extends Controller
 
     public function destroy(UserAvailability $availability)
     {
+        $actor = request()->user();
+        $orgId = (int) $actor->current_organization_id;
+        $canManageAll = in_array($actor->currentOrganizationRole(), ['admin', 'maintainer'], true);
+
+        if ((int) $availability->organization_id !== $orgId) {
+            abort(404);
+        }
+
+        if (! $canManageAll && (int) $availability->user_id !== (int) $actor->id) {
+            abort(403);
+        }
+
         $availability->delete();
 
         return response()->json(null, 204);

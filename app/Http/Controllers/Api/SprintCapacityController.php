@@ -14,8 +14,10 @@ class SprintCapacityController extends Controller
         private SprintCapacityCalculator $calculator
     ) {}
 
-    public function summary(Sprint $sprint)
+    public function summary(Request $request, Sprint $sprint)
     {
+        $this->authorizeSprintScope($request, $sprint);
+
         $summary = $this->calculator->getCapacitySummary($sprint);
 
         return response()->json($summary);
@@ -23,6 +25,8 @@ class SprintCapacityController extends Controller
 
     public function userCapacity(Request $request, Sprint $sprint)
     {
+        $this->authorizeSprintScope($request, $sprint);
+
         $orgId = $request->user()->current_organization_id;
 
         // Get all users in the organization
@@ -58,8 +62,10 @@ class SprintCapacityController extends Controller
         ]);
     }
 
-    public function workingDays(Sprint $sprint)
+    public function workingDays(Request $request, Sprint $sprint)
     {
+        $this->authorizeSprintScope($request, $sprint);
+
         $workingDays = $this->calculator->calculateWorkingDays($sprint);
 
         return response()->json([
@@ -68,5 +74,18 @@ class SprintCapacityController extends Controller
             'start_date' => $sprint->start_date->format('Y-m-d'),
             'end_date' => $sprint->end_date->format('Y-m-d'),
         ]);
+    }
+
+    private function authorizeSprintScope(Request $request, Sprint $sprint): void
+    {
+        $user = $request->user();
+
+        if ((int) $sprint->organization_id !== (int) $user->current_organization_id) {
+            abort(404);
+        }
+
+        if ($user->current_project_id && (int) $sprint->project_id !== (int) $user->current_project_id) {
+            abort(404);
+        }
     }
 }

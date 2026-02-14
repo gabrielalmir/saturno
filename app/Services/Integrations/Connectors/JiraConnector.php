@@ -32,6 +32,8 @@ class JiraConnector extends BaseConnector
         if (empty($config['base_url'])) {
             throw new \InvalidArgumentException('URL base do Jira obrigatória.');
         }
+
+        $this->assertSafeBaseUrl((string) $config['base_url']);
     }
 
     public function testConnection(Integration $integration): ConnectionResult
@@ -367,5 +369,36 @@ class JiraConnector extends BaseConnector
         $firstProject = $data['values'][0] ?? null;
 
         return is_array($firstProject) ? ($firstProject['key'] ?? null) : null;
+    }
+
+    private function assertSafeBaseUrl(string $baseUrl): void
+    {
+        $parts = parse_url($baseUrl);
+        if (! is_array($parts)) {
+            throw new \InvalidArgumentException('URL base do Jira inválida.');
+        }
+
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        $host = strtolower((string) ($parts['host'] ?? ''));
+
+        if ($scheme !== 'https') {
+            throw new \InvalidArgumentException('A URL base do Jira deve usar HTTPS.');
+        }
+
+        if ($host === '' || $host === 'localhost' || str_ends_with($host, '.local') || ! str_contains($host, '.')) {
+            throw new \InvalidArgumentException('Host da integração Jira não permitido.');
+        }
+
+        if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+            $isPublicIp = filter_var(
+                $host,
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+            ) !== false;
+
+            if (! $isPublicIp) {
+                throw new \InvalidArgumentException('Endereços IP privados/reservados não são permitidos.');
+            }
+        }
     }
 }

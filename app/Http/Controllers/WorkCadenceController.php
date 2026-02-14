@@ -26,6 +26,8 @@ class WorkCadenceController extends Controller
 
     public function store(Request $request)
     {
+        $this->ensureManager($request);
+
         $orgId = $request->user()->current_organization_id;
         $validated = $request->validate([
             'team_id' => 'required|exists:teams,id',
@@ -43,6 +45,8 @@ class WorkCadenceController extends Controller
 
     public function update(Request $request, WorkCadence $cadence)
     {
+        $this->ensureManager($request);
+
         if ($cadence->organization_id !== $request->user()->current_organization_id) {
             abort(403);
         }
@@ -61,6 +65,8 @@ class WorkCadenceController extends Controller
 
     public function destroy(Request $request, WorkCadence $cadence)
     {
+        $this->ensureManager($request);
+
         if ($cadence->organization_id !== $request->user()->current_organization_id) {
             abort(403);
         }
@@ -68,5 +74,12 @@ class WorkCadenceController extends Controller
         $cadence->delete();
 
         return redirect()->back();
+    }
+
+    private function ensureManager(Request $request): void
+    {
+        if (! in_array($request->user()->currentOrganizationRole(), ['admin', 'maintainer'], true)) {
+            abort(403);
+        }
     }
 }
