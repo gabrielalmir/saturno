@@ -14,6 +14,8 @@ class IntegrationController extends Controller
 {
     public function index(Request $request)
     {
+        $this->ensureManager($request);
+
         $orgId = $request->user()->current_organization_id;
         $integrations = Integration::where('organization_id', $orgId)->get();
         $logs = IntegrationSyncLog::whereIn('integration_id', $integrations->pluck('id'))
@@ -27,6 +29,8 @@ class IntegrationController extends Controller
 
     public function store(Request $request)
     {
+        $this->ensureManager($request);
+
         $orgId = $request->user()->current_organization_id;
         $data = $request->validate([
             'provider' => 'required|in:jira,trello,todoist',
@@ -55,6 +59,8 @@ class IntegrationController extends Controller
 
     public function test(Request $request, Integration $integration)
     {
+        $this->ensureManager($request);
+
         if ((int) $integration->organization_id !== (int) $request->user()->current_organization_id) {
             abort(404);
         }
@@ -67,6 +73,8 @@ class IntegrationController extends Controller
 
     public function syncNow(Request $request, Integration $integration)
     {
+        $this->ensureManager($request);
+
         if ((int) $integration->organization_id !== (int) $request->user()->current_organization_id) {
             abort(404);
         }
@@ -78,6 +86,8 @@ class IntegrationController extends Controller
 
     public function update(Request $request, Integration $integration)
     {
+        $this->ensureManager($request);
+
         if ((int) $integration->organization_id !== (int) $request->user()->current_organization_id) {
             abort(404);
         }
@@ -109,6 +119,8 @@ class IntegrationController extends Controller
 
     public function destroy(Request $request, Integration $integration)
     {
+        $this->ensureManager($request);
+
         if ((int) $integration->organization_id !== (int) $request->user()->current_organization_id) {
             abort(404);
         }
@@ -120,6 +132,8 @@ class IntegrationController extends Controller
 
     public function toggle(Request $request, Integration $integration)
     {
+        $this->ensureManager($request);
+
         if ((int) $integration->organization_id !== (int) $request->user()->current_organization_id) {
             abort(404);
         }
@@ -135,6 +149,8 @@ class IntegrationController extends Controller
 
     public function links(Request $request, Integration $integration)
     {
+        $this->ensureManager($request);
+
         if ((int) $integration->organization_id !== (int) $request->user()->current_organization_id) {
             abort(404);
         }
@@ -142,5 +158,12 @@ class IntegrationController extends Controller
         $links = IntegrationLink::where('integration_id', $integration->id)->with('workItem')->paginate(20);
 
         return response()->json($links);
+    }
+
+    private function ensureManager(Request $request): void
+    {
+        if (! in_array($request->user()->currentOrganizationRole(), ['admin', 'maintainer'], true)) {
+            abort(403);
+        }
     }
 }

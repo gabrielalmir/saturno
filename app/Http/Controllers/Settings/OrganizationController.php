@@ -224,13 +224,41 @@ class OrganizationController extends Controller
     public function updateMemberRole(Request $request, User $member)
     {
         $organization = $this->ensureManager($request);
+        $actorRole = $request->user()->currentOrganizationRole();
 
         $validated = $request->validate([
             'role' => 'required|in:admin,maintainer,analyst,user',
         ]);
 
+        $memberPivot = $organization->users()->where('users.id', $member->id)->first()?->pivot;
+        if (! $memberPivot) {
+            abort(404);
+        }
+
+        $currentMemberRole = (string) $memberPivot->role;
+        $targetRole = (string) $validated['role'];
+
+        if ($actorRole !== 'admin') {
+            if ($targetRole === 'admin') {
+                abort(403, 'Apenas administradores podem conceder papel de admin.');
+            }
+
+            if ($currentMemberRole === 'admin') {
+                abort(403, 'Apenas administradores podem alterar outro administrador.');
+            }
+        }
+
+        if ($currentMemberRole === 'admin' && $targetRole !== 'admin') {
+            $adminCount = $organization->users()->wherePivot('role', 'admin')->count();
+            if ($adminCount <= 1) {
+                return redirect()->back()->withErrors([
+                    'member' => 'A organizacao precisa ter pelo menos um administrador.',
+                ]);
+            }
+        }
+
         $organization->users()->updateExistingPivot($member->id, [
-            'role' => $validated['role'],
+            'role' => $targetRole,
         ]);
 
         return redirect()->back();

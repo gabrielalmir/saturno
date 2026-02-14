@@ -19,6 +19,10 @@ class SprintN1ReservationController extends Controller
             abort(404);
         }
 
+        if ($user->current_project_id && (int) $sprint->project_id !== (int) $user->current_project_id) {
+            abort(404);
+        }
+
         $orgRole = $user->currentOrganizationRole();
         $canManageAll = in_array($orgRole, ['admin', 'maintainer'], true);
 
@@ -55,6 +59,10 @@ class SprintN1ReservationController extends Controller
         $orgId = (int) $actor->current_organization_id;
 
         if ((int) $sprint->organization_id !== $orgId) {
+            abort(404);
+        }
+
+        if ($actor->current_project_id && (int) $sprint->project_id !== (int) $actor->current_project_id) {
             abort(404);
         }
 
