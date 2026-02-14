@@ -18,8 +18,17 @@ export default defineConfig({
 			customCss: ['./src/styles/starlight-landing.css'],
 			components: {
 				SiteTitle: './src/components/starlight/SiteTitle.astro',
+				Search: './src/components/starlight/Search.astro',
 				ThemeSelect: './src/components/starlight/ThemeSelect.astro',
 				Footer: './src/components/starlight/Footer.astro',
+			},
+			pagefind: {
+				ranking: {
+					pageLength: 0.1,
+					termFrequency: 0.5,
+					termSaturation: 1.6,
+					termSimilarity: 7,
+				},
 			},
 			head: [
 				{
