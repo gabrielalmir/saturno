@@ -1,0 +1,50 @@
+---
+import AppLogoIcon from '@/components/AppLogoIcon';
+const { siteTitle } = Astro.locals.starlightRoute;
+// Link to landing page instead of docs root
+const siteTitleHref = '/';
+---
+
+<a href={siteTitleHref} class="site-title sl-flex">
+	<span class="site-title-logo" aria-hidden="true">
+		<AppLogoIcon className="site-logo-icon" cutout="var(--sl-color-bg)" />
+	</span>
+	<span class="site-title-text" translate="no">{siteTitle}</span>
+</a>
+
+<style>
+	@layer starlight.core {
+		.site-title {
+			align-items: center;
+			gap: 2;
+			font-size: var(--sl-text-h4);
+			font-weight: 600;
+			color: var(--sl-color-text-accent);
+			text-decoration: none;
+			white-space: nowrap;
+			min-width: 0;
+		}
+		.site-title-logo {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+			height: 2rem;
+			width: 2rem;
+			border-radius: 0.5rem;
+			border: 1px solid var(--sl-color-hairline);
+			background: color-mix(in oklab, var(--sl-color-bg-sidebar) 85%, transparent);
+		}
+		.site-logo-icon {
+			height: 1.25rem;
+			width: 1.25rem;
+			color: var(--sl-color-gray-1);
+		}
+		.site-title-text {
+			font-size: var(--sl-text-base);
+			font-weight: 600;
+			color: var(--sl-color-gray-1);
+			overflow: hidden;
+		}
+	}
+</style>
