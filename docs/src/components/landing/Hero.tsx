@@ -30,7 +30,7 @@ function TerminalBlock() {
 	}, [visibleLines, lines.length]);
 
 	return (
-		<div className="relative mx-auto mt-20 max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-[#0A0C10] ring-1 ring-indigo-500/20 shadow-[0_0_0_1px_rgba(99,102,241,0.1),0_0_30px_rgba(99,102,241,0.12),0_0_60px_rgba(168,85,247,0.06)]">
+		<div className="relative mx-auto mt-20 max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-[#0A0C12] ring-1 ring-[#5E6AD2]/25 shadow-[0_0_0_1px_rgba(94,106,210,0.16),0_0_34px_rgba(94,106,210,0.14),0_0_64px_rgba(95,168,255,0.08)]">
 			{/* Title bar */}
 			<div className="flex items-center gap-2 border-b border-white/5 px-4 py-3">
 				<div className="flex gap-1.5">
@@ -82,7 +82,7 @@ export default function Hero() {
 				className="absolute inset-0 z-0"
 				quantity={80}
 				staticity={40}
-				color="#6366f1"
+				color="#5e6ad2"
 				ease={60}
 				size={0.4}
 			/>
@@ -90,7 +90,7 @@ export default function Hero() {
 				className="absolute inset-0 z-0"
 				quantity={40}
 				staticity={50}
-				color="#a855f7"
+				color="#5fa8ff"
 				ease={80}
 				size={0.3}
 			/>
@@ -110,8 +110,8 @@ export default function Hero() {
 					<AnimatedGradientText
 						className="font-display"
 						speed={1.4}
-						colorFrom="#818cf8"
-						colorTo="#c084fc"
+						colorFrom="#5E6AD2"
+						colorTo="#8FA3FF"
 					>
 						open source
 					</AnimatedGradientText>
@@ -127,7 +127,7 @@ export default function Hero() {
 					<ShimmerButton
 						asChild
 						className="h-14 min-h-14 px-8 text-base font-semibold"
-						background="rgba(99,102,241,0.9)"
+						background="rgba(94,106,210,0.92)"
 						shimmerColor="#ffffff"
 						shimmerDuration="2.6s"
 					>

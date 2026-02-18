@@ -1,33 +1,62 @@
 ---
 title: Variáveis de Ambiente
-description: Variáveis essenciais para configurar o Saturno.
+description: Variáveis essenciais para operar Saturno com previsibilidade.
 ---
+
+Esta referência prioriza variáveis já utilizadas no projeto atual (`.env.example` + configs Laravel).
 
 ## Aplicação
 
-| Variável | Exemplo | Descrição |
+| Variável | Exemplo | Observação |
 |---|---|---|
-| `APP_NAME` | `Saturno` | Nome da aplicação |
-| `APP_ENV` | `production` | Ambiente de execução |
-| `APP_DEBUG` | `false` | Exibição de erros detalhados |
-| `APP_URL` | `https://saturno.exemplo.com` | URL pública |
-| `APP_KEY` | `base64:...` | Chave de criptografia |
+| `APP_NAME` | `Saturno` | Nome exibido da aplicação |
+| `APP_ENV` | `production` / `local` | Ambiente de execução |
+| `APP_DEBUG` | `false` | Em produção, mantenha `false` |
+| `APP_URL` | `http://localhost:8080` | URL base pública |
+| `APP_KEY` | `base64:...` | Obrigatória para criptografia/session |
+| `APP_PORT` | `8080` | Porta exposta pelo compose |
 
-## Banco
+## Banco de dados
 
-| Variável | Exemplo | Descrição |
+| Variável | Exemplo | Observação |
 |---|---|---|
-| `DB_CONNECTION` | `pgsql` | Driver do banco |
-| `DB_HOST` | `db` | Host do banco |
-| `DB_PORT` | `5432` | Porta do banco |
+| `DB_CONNECTION` | `pgsql` | Padrão recomendado |
+| `DB_HOST` | `db` | No Docker Compose, host é `db` |
+| `DB_PORT` | `5432` | Porta padrão PostgreSQL |
 | `DB_DATABASE` | `saturno` | Nome do banco |
 | `DB_USERNAME` | `saturno` | Usuário |
-| `DB_PASSWORD` | `changeme` | Senha |
+| `DB_PASSWORD` | `changeme` | Defina segredo forte em produção |
+| `DB_SSLMODE` | `require` | Recomendado em ambiente externo |
 
-## Filas e e-mail
+## Fila, sessão e cache
 
-| Variável | Exemplo | Descrição |
+| Variável | Exemplo | Observação |
 |---|---|---|
-| `QUEUE_CONNECTION` | `database` | Driver de filas |
-| `MAIL_MAILER` | `smtp` | Driver de e-mail |
-| `MAIL_HOST` | `smtp.exemplo.com` | Host SMTP |
+| `QUEUE_CONNECTION` | `database` | Exige worker ativo |
+| `SESSION_DRIVER` | `database` | Exige migrations de sessão |
+| `CACHE_STORE` | `database` | Cache persistente no banco |
+
+## E-mail
+
+| Variável | Exemplo | Observação |
+|---|---|---|
+| `MAIL_MAILER` | `log` / `smtp` | `log` é padrão seguro para bootstrap |
+| `MAIL_HOST` | `smtp.exemplo.com` | Para SMTP |
+| `MAIL_PORT` | `587` | Porta SMTP |
+| `MAIL_USERNAME` | `usuario` | Opcional conforme provedor |
+| `MAIL_PASSWORD` | `senha` | Segredo |
+| `MAIL_FROM_ADDRESS` | `no-reply@dominio.com` | Remetente |
+| `MAIL_FROM_NAME` | `Saturno` | Nome do remetente |
+
+## Após alterar variáveis
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+Se a mudança afeta banco, rode migrations:
+
+```bash
+php artisan migrate --force
+```

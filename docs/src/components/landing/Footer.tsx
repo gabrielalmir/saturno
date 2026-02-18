@@ -52,22 +52,22 @@ export default function Footer() {
 					<h3 className="mb-4 text-sm font-semibold text-white">Produto</h3>
 					<ul className="space-y-3 text-sm text-slate-400">
 						<li>
-							<a href="#planning" className="transition-colors hover:text-indigo-400">
+							<a href="#planning" className="transition-colors hover:text-[#9BA5F8]">
 								Planejamento
 							</a>
 						</li>
 						<li>
-							<a href="#boards" className="transition-colors hover:text-indigo-400">
+							<a href="#boards" className="transition-colors hover:text-[#9BA5F8]">
 								Quadros Sprint
 							</a>
 						</li>
 						<li>
-							<a href="#showcase" className="transition-colors hover:text-indigo-400">
+							<a href="#showcase" className="transition-colors hover:text-[#9BA5F8]">
 								Roadmaps
 							</a>
 						</li>
 						<li>
-							<a href="#intelligence" className="transition-colors hover:text-indigo-400">
+							<a href="#intelligence" className="transition-colors hover:text-[#9BA5F8]">
 								Inteligência
 							</a>
 						</li>
@@ -78,7 +78,7 @@ export default function Footer() {
 					<h3 className="mb-4 text-sm font-semibold text-white">Recursos</h3>
 					<ul className="space-y-3 text-sm text-slate-400">
 						<li>
-							<a href="/docs/" className="transition-colors hover:text-indigo-400">
+							<a href="/docs/" className="transition-colors hover:text-[#9BA5F8]">
 								Documentação
 							</a>
 						</li>
@@ -87,7 +87,7 @@ export default function Footer() {
 								href="https://github.com/gabrielalmir/saturno"
 								target="_blank"
 								rel="noreferrer"
-								className="transition-colors hover:text-indigo-400"
+								className="transition-colors hover:text-[#9BA5F8]"
 							>
 								API
 							</a>
@@ -97,7 +97,7 @@ export default function Footer() {
 								href="https://github.com/gabrielalmir/saturno/discussions"
 								target="_blank"
 								rel="noreferrer"
-								className="transition-colors hover:text-indigo-400"
+								className="transition-colors hover:text-[#9BA5F8]"
 							>
 								Comunidade
 							</a>
@@ -107,7 +107,7 @@ export default function Footer() {
 								href="https://github.com/gabrielalmir/saturno/blob/main/README.md"
 								target="_blank"
 								rel="noreferrer"
-								className="transition-colors hover:text-indigo-400"
+								className="transition-colors hover:text-[#9BA5F8]"
 							>
 								Manifesto
 							</a>
@@ -123,7 +123,7 @@ export default function Footer() {
 								href="https://github.com/gabrielalmir/saturno"
 								target="_blank"
 								rel="noreferrer"
-								className="transition-colors hover:text-indigo-400"
+								className="transition-colors hover:text-[#9BA5F8]"
 							>
 								GitHub
 							</a>
@@ -133,7 +133,7 @@ export default function Footer() {
 								href="https://github.com/gabrielalmir/saturno/issues"
 								target="_blank"
 								rel="noreferrer"
-								className="transition-colors hover:text-indigo-400"
+								className="transition-colors hover:text-[#9BA5F8]"
 							>
 								Issues & Bugs
 							</a>
@@ -143,7 +143,7 @@ export default function Footer() {
 								href="https://github.com/gabrielalmir/saturno/discussions"
 								target="_blank"
 								rel="noreferrer"
-								className="transition-colors hover:text-indigo-400"
+								className="transition-colors hover:text-[#9BA5F8]"
 							>
 								Discussões
 							</a>
@@ -153,7 +153,7 @@ export default function Footer() {
 								href="https://github.com/gabrielalmir/saturno/blob/main/CONTRIBUTING.md"
 								target="_blank"
 								rel="noreferrer"
-								className="transition-colors hover:text-indigo-400"
+								className="transition-colors hover:text-[#9BA5F8]"
 							>
 								Contribuir
 							</a>
@@ -169,7 +169,7 @@ export default function Footer() {
 						href="https://github.com/gabrielalmir/saturno"
 						target="_blank"
 						rel="noreferrer"
-						className="text-indigo-400 hover:text-indigo-300"
+						className="text-[#9BA5F8] hover:text-[#B9C2FF]"
 					>
 						Feito com ❤️ por Gabriel Almir
 					</a>

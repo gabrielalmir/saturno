@@ -1,17 +1,15 @@
 ---
 title: Banco de Dados
-description: Configuração de SQLite e PostgreSQL.
+description: Estratégias de banco para Docker, desenvolvimento local e produção.
 ---
 
-## SQLite (desenvolvimento)
+## Banco padrão do projeto atual
 
-Configuração padrão para ambiente local.
+O fluxo oficial usa **PostgreSQL**.
 
-```ini
-DB_CONNECTION=sqlite
-```
+No `docker-compose.yml`, o serviço `db` utiliza `postgres:17-alpine`.
 
-## PostgreSQL (produção)
+## Configuração recomendada (Docker)
 
 ```ini
 DB_CONNECTION=pgsql
@@ -22,15 +20,41 @@ DB_USERNAME=saturno
 DB_PASSWORD=changeme
 ```
 
+## Configuração local com PostgreSQL
+
+```ini
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=saturno
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
+
+## Configuração local com SQLite (dev rápido)
+
+```ini
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+```
+
+Crie o arquivo antes de migrar:
+
+```bash
+touch database/database.sqlite
+```
+
 ## Operações essenciais
 
 ```bash
 php artisan migrate --force
+php artisan migrate:status
 php artisan db:seed
 ```
 
-## Recomendações
+## Boas práticas em produção
 
-- habilitar backup automático
-- monitorar crescimento de tabelas
-- restringir acesso de rede ao banco
+- backup com retenção e teste de restore
+- usuário de banco com menor privilégio
+- monitoramento de crescimento e índices
+- conexão TLS entre app e banco quando aplicável

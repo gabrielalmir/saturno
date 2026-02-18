@@ -1,20 +1,26 @@
 ---
 title: Permissões
-description: Modelo de acesso e responsabilidades por perfil.
+description: Papéis e regras de acesso usados no Saturno.
 ---
 
-## Perfis funcionais
+## Papéis de organização
 
-- **Administrador**: configura organização, equipes e parâmetros globais.
-- **Gestor**: planeja sprint e acompanha métricas.
-- **Colaborador**: executa work items e atualiza status.
+| Papel | Escopo principal |
+|---|---|
+| `admin` | Controle total da organização, gestão de membros/papéis e operações críticas de governança |
+| `maintainer` | Gestão operacional (sprints, integrações, capacidade), sem privilégios máximos de governança |
+| `analyst` | Execução e operação diária, com permissões reduzidas para ações gerenciais |
+| `user` | Acesso básico conforme associação a organização/projeto |
 
-## Regras recomendadas
+## Regras práticas observadas no backend
 
-- aplicar princípio de menor privilégio
-- revisar acessos em base recorrente
-- remover acessos inativos imediatamente
+- Ações de planejamento e integrações geralmente exigem `admin` ou `maintainer`.
+- Endpoints de capacidade validam escopo de organização e projeto do usuário.
+- Em alguns fluxos, usuários sem papel gerencial só podem editar os próprios dados.
 
-## Auditoria
+## Boas práticas
 
-Mantenha trilha de ações críticas para investigação e conformidade operacional.
+- adotar menor privilégio
+- revisar acessos periodicamente
+- garantir ao menos um `admin` por organização
+- registrar ações sensíveis para auditoria
