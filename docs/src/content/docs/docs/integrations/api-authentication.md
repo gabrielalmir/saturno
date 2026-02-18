@@ -1,16 +1,32 @@
 ---
 title: Autenticação da API
-description: Estratégia de autenticação para integrações programáticas.
+description: Como autenticação e autorização funcionam nos endpoints internos do Saturno.
 ---
 
-## Princípios
+## Modelo atual
 
-- autenticação obrigatória em endpoints privados
-- uso de credenciais por integração
-- rotação periódica de chaves/tokens
+A API interna usa autenticação da aplicação web Laravel (sessão/cookie), não tokens públicos dedicados.
 
-## Boas práticas
+Na prática, os endpoints `/api/*` exigem:
 
-- não expor credenciais em frontend
-- usar variáveis de ambiente para segredos
-- aplicar escopos mínimos por integração
+- sessão autenticada (`auth`)
+- e-mail verificado (`verified`)
+- organização ativa (`hasOrg`)
+
+## Implicações para integração
+
+- Chamadas diretas sem sessão válida retornam redirecionamento/erro de autenticação.
+- Parte dos endpoints exige papel `admin` ou `maintainer`.
+- O escopo de dados é limitado à organização/projeto atual do usuário autenticado.
+
+## Recomendações
+
+- Para automações internas, prefira executar dentro do contexto autenticado da aplicação.
+- Para integrações externas, use um backend intermediário seu para controlar credenciais e sessão.
+- Não exponha cookies, segredos ou credenciais no frontend público.
+
+## Boas práticas de segurança
+
+- Rotacione credenciais operacionais periodicamente.
+- Registre auditoria de ações críticas (sync, alterações de capacidade, reservas N1).
+- Restrinja privilégios por função (`admin`, `maintainer`, `analyst`, `user`).

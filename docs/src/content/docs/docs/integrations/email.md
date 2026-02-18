@@ -1,11 +1,19 @@
 ---
 title: E-mail
-description: Configuração de envio de e-mails transacionais.
+description: Configuração de envio de e-mails no Saturno.
 ---
 
-Saturno suporta provedores SMTP e drivers de e-mail do framework.
+## Comportamento padrão
 
-## Exemplo SMTP
+No `.env.example`, o projeto inicia com:
+
+```ini
+MAIL_MAILER=log
+```
+
+Esse modo evita envio real durante bootstrap e registra mensagens em log.
+
+## Configuração SMTP (produção)
 
 ```ini
 MAIL_MAILER=smtp
@@ -18,6 +26,15 @@ MAIL_FROM_ADDRESS=no-reply@seudominio.com
 MAIL_FROM_NAME=Saturno
 ```
 
-## Teste de entrega
+## Após alterar configuração
 
-Após configurar, execute um fluxo de convite ou notificação para validar envio.
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+## Validação recomendada
+
+- Execute um fluxo real que dispara e-mail (ex.: convite/recuperação de conta).
+- Confirme entrega no provedor SMTP.
+- Monitore falhas de envio em logs e fila.

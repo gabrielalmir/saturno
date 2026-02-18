@@ -1,26 +1,27 @@
 ---
 title: Introdução
-description: Visão geral da plataforma Saturno e casos de uso.
+description: Visão geral do Saturno, arquitetura operacional e fluxo recomendado.
 ---
 
-O Saturno permite organizar trabalho técnico em sprints com rastreabilidade entre épicos, work items e execução diária.
+Saturno é uma plataforma para planejamento e execução de trabalho técnico com foco em sprint, capacidade e visibilidade operacional.
 
-## Para quem é
+## O que você encontra no produto
 
-- Times de engenharia que precisam planejar capacidade e prioridades.
-- Equipes que operam com backlog técnico e demandas de negócio.
-- Organizações que desejam self-hosting e controle dos dados.
+- gestão por organização/projeto com controle de papéis
+- planejamento e execução de sprints
+- board de sprint e calendário
+- gestão de work items e épicos
+- integrações com provedores externos (Jira, Trello, Todoist)
 
-## O que o sistema suporta
+## Como o sistema roda hoje
 
-- Estrutura por organização e equipe.
-- Planejamento e execução de sprints.
-- Visão em board Kanban e calendário.
-- Agrupamento por épicos.
-- Base para integrações externas.
+- **App web**: Laravel + Inertia/React
+- **Banco**: PostgreSQL (padrão atual do projeto)
+- **Fila**: driver `database`
+- **Healthcheck**: `GET /health`
 
-## Próximos passos
+## Fluxo recomendado para começar
 
-1. Execute o **[Quick Start](/docs/getting-started/quick-start/)**.
-2. Revise **[Configuração](/docs/getting-started/configuration/)**.
-3. Crie seu fluxo inicial com **[Primeiro Projeto](/docs/guides/first-project/)**.
+1. Execute o **[Quick Start](/docs/getting-started/quick-start/)** (Docker Compose).
+2. Ajuste parâmetros em **[Configuração](/docs/getting-started/configuration/)**.
+3. Siga **[Primeiro Projeto](/docs/guides/first-project/)** para operacionalizar o uso.

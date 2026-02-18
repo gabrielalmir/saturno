@@ -2,7 +2,7 @@ import { Check, X } from 'lucide-react';
 
 export default function Comparison() {
 	return (
-		<section id="comparison" className="bg-[#0B0D13] px-6 py-24">
+		<section id="comparison" className="bg-[#090D15] px-6 py-24">
 			<div className="mx-auto max-w-4xl">
 				<div className="mb-16 text-center">
 					<h2 className="mb-4 text-3xl font-bold text-white">
@@ -38,28 +38,28 @@ export default function Comparison() {
 						</ul>
 					</div>
 
-					<div className="relative rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-8">
-						<div className="absolute inset-0 -z-10 bg-indigo-500/5 blur-3xl" />
+					<div className="relative rounded-2xl border border-[#5E6AD2]/30 bg-[#5E6AD2]/10 p-8">
+						<div className="absolute inset-0 -z-10 bg-[#5E6AD2]/10 blur-3xl" />
 
 						<h3 className="mb-6 flex items-center gap-2 text-xl font-semibold text-white">
-							<span className="h-2 w-2 rounded-full bg-indigo-500" />
+							<span className="h-2 w-2 rounded-full bg-[#7D89ED]" />
 							Saturno
 						</h3>
 						<ul className="space-y-4">
 							<li className="flex items-start gap-3 text-slate-300">
-								<Check className="mt-0.5 h-5 w-5 text-indigo-400" />
+								<Check className="mt-0.5 h-5 w-5 text-[#9BA5F8]" />
 								<span>Planejamento de capacidade automatizado</span>
 							</li>
 							<li className="flex items-start gap-3 text-slate-300">
-								<Check className="mt-0.5 h-5 w-5 text-indigo-400" />
+								<Check className="mt-0.5 h-5 w-5 text-[#9BA5F8]" />
 								<span>Feito para equipes de alta velocidade</span>
 							</li>
 							<li className="flex items-start gap-3 text-slate-300">
-								<Check className="mt-0.5 h-5 w-5 text-indigo-400" />
+								<Check className="mt-0.5 h-5 w-5 text-[#9BA5F8]" />
 								<span>Distingue trabalho N1 vs N2</span>
 							</li>
 							<li className="flex items-start gap-3 text-slate-300">
-								<Check className="mt-0.5 h-5 w-5 text-indigo-400" />
+								<Check className="mt-0.5 h-5 w-5 text-[#9BA5F8]" />
 								<span>Fluxo opinativo, zero configuração</span>
 							</li>
 						</ul>

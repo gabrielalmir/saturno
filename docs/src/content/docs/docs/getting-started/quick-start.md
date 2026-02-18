@@ -1,16 +1,15 @@
 ---
 title: Quick Start
-description: Rode o Saturno localmente em menos de 5 minutos.
+description: Suba o Saturno rapidamente com Docker Compose e valide o fluxo principal.
 ---
 
-Este fluxo inicializa uma instância local com configuração padrão.
+Este guia usa o caminho mais previsível para começar: **Docker Compose + PostgreSQL** (padrão do projeto atual).
 
 ## Pré-requisitos
 
-- PHP 8.2+
-- Composer 2+
-- Node.js 18+ e npm
-- SQLite (padrão) ou PostgreSQL
+- Docker 24+ e Docker Compose (plugin)
+- Porta `8080` livre para a aplicação
+- Git
 
 ## 1. Clonar o repositório
 
@@ -19,42 +18,44 @@ git clone https://github.com/gabrielalmir/saturno.git
 cd saturno
 ```
 
-## 2. Setup automático
+## 2. Criar arquivo de ambiente
 
 ```bash
-composer setup
+cp .env.example .env
 ```
 
-O comando prepara ambiente, instala dependências, cria `.env`, gera chave e executa migrations.
-
-## 3. Subir ambiente local
+## 3. Gerar `APP_KEY`
 
 ```bash
-composer dev
+docker compose run --rm app php artisan key:generate
 ```
 
-A aplicação ficará disponível em `http://localhost:8000`.
+## 4. Subir aplicação e banco
 
-## 4. Primeiro login
+```bash
+docker compose up -d --build
+```
 
-1. Acesse `http://localhost:8000`.
-2. Crie a conta administrativa inicial.
-3. Entre no sistema com as credenciais criadas.
+## 5. Executar migrations
 
-## 5. Primeiro projeto
+```bash
+docker compose exec app php artisan migrate --force
+```
 
-1. Crie uma organização.
-2. Crie ao menos uma equipe.
-3. Crie a primeira sprint com período e capacidade.
+## 6. Validar saúde da aplicação
 
-## 6. Primeiro work item
+- Aplicação: `http://localhost:8080`
+- Healthcheck: `http://localhost:8080/health` (resposta esperada: `{"status":"ok"}`)
 
-1. Abra o board da sprint.
-2. Crie um work item com título, prioridade e responsável.
-3. Mova o item para a coluna de execução.
+## 7. Primeiro acesso funcional
 
-## Verificação rápida
+1. Crie sua conta.
+2. Crie uma organização.
+3. Crie um projeto/equipe.
+4. Abra **Sprint Planning** e inicie sua primeira sprint.
 
-- Interface acessível em `http://localhost:8000`.
-- Organização e sprint visíveis no painel.
-- Work item criado e rastreável no board.
+## Próximos passos recomendados
+
+1. Ajuste variáveis em **[Configuração](/docs/getting-started/configuration/)**.
+2. Se for operar sem Docker, veja **[Rodando Localmente](/docs/self-hosting/running-locally/)**.
+3. Para produção, siga **[Deploy em Produção](/docs/self-hosting/production-deploy/)**.

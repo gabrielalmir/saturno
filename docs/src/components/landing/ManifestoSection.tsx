@@ -23,9 +23,9 @@ export default function ManifestoSection() {
 	return (
 		<section id="manifesto" className="px-6 py-24">
 			<div className="mx-auto max-w-6xl">
-				<div className="rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-500/10 via-[#0B0D13] to-purple-500/10 p-8 shadow-[0_30px_120px_rgba(76,29,149,0.22)] md:p-12">
+				<div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#5E6AD2]/14 via-[#0B0F18] to-[#5FA8FF]/10 p-8 shadow-[0_30px_120px_rgba(26,35,68,0.38)] md:p-12">
 					<div className="max-w-3xl">
-						<div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold tracking-wide text-indigo-300 uppercase">
+						<div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold tracking-wide text-[#9BA5F8] uppercase">
 							<Sparkles className="h-3.5 w-3.5" />
 							Manifesto Saturno
 						</div>
@@ -57,15 +57,18 @@ export default function ManifestoSection() {
 					</div>
 
 					<div className="mt-10 flex flex-wrap items-center gap-3">
-						<a href="https://github.com/gabrielalmir/saturno/blob/main/README.md">
-							<Button className="h-11 rounded-full bg-indigo-600 px-6 text-white hover:bg-indigo-500">
-								Ler manifesto completo
+						<a
+							href="https://github.com/gabrielalmir/saturno/blob/main/README.md"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<Button className="h-11 rounded-full bg-[#5E6AD2] px-6 text-white hover:bg-[#6A77DF]">
+								Ver manifesto completo no GitHub
 								<ArrowRight className="ml-2 h-4 w-4" />
 							</Button>
 						</a>
 						<p className="text-sm text-slate-400">
-							Feito para times que querem contribuir, evoluir e entregar impacto
-							duradouro.
+							Resumo estratégico do produto e da visão de engenharia do Saturno.
 						</p>
 					</div>
 				</div>

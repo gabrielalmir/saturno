@@ -13,7 +13,7 @@ export default function CTA() {
 				className="absolute inset-0 z-0 text-white/[0.04] [mask-image:radial-gradient(500px_circle_at_center,white,transparent)]"
 			/>
 
-			<div className="pointer-events-none absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-[100px]" />
+			<div className="pointer-events-none absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#5E6AD2]/14 blur-[100px]" />
 
 			<div className="relative z-10 mx-auto max-w-3xl space-y-8">
 				<div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-500/20 bg-green-500/10 px-4 py-2 text-sm font-medium text-green-400">
@@ -33,7 +33,7 @@ export default function CTA() {
 						asChild
 						className="h-14 min-h-14 px-8 text-lg font-semibold"
 						background="#ffffff"
-						shimmerColor="#6366f1"
+						shimmerColor="#5E6AD2"
 						shimmerDuration="3s"
 					>
 						<a

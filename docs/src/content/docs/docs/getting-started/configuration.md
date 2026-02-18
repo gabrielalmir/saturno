@@ -1,46 +1,83 @@
 ---
 title: Configuração
-description: Ajustes iniciais de ambiente, banco de dados e execução.
+description: Como ajustar ambiente, banco, fila e execução no Saturno.
 ---
 
-## Arquivo `.env`
-
-Use `.env` para definir parâmetros de aplicação, banco e filas.
+## 1. Arquivo de ambiente
 
 ```bash
 cp .env.example .env
 ```
 
-## Configurações mínimas
+O projeto já fornece `.env.example` com baseline de produção em Docker (`APP_URL=http://localhost:8080` e PostgreSQL).
+
+## 2. Perfis de configuração
+
+### Docker Compose (padrão recomendado)
 
 ```ini
-APP_NAME=Saturno
-APP_ENV=local
-APP_URL=http://localhost:8000
-DB_CONNECTION=sqlite
-QUEUE_CONNECTION=database
-```
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=http://localhost:8080
+APP_PORT=8080
 
-## Usando PostgreSQL
-
-```ini
 DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
+DB_HOST=db
 DB_PORT=5432
 DB_DATABASE=saturno
 DB_USERNAME=saturno
 DB_PASSWORD=changeme
+
+QUEUE_CONNECTION=database
+SESSION_DRIVER=database
+CACHE_STORE=database
+MAIL_MAILER=log
 ```
 
-Após alteração de banco:
+### Host local com PostgreSQL
+
+```ini
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=saturno
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
+
+### Host local com SQLite (desenvolvimento)
+
+```ini
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+```
+
+Crie o arquivo de banco antes das migrations:
 
 ```bash
+touch database/database.sqlite
+```
+
+## 3. Aplicar alterações com segurança
+
+Sempre que alterar `.env`, execute:
+
+```bash
+php artisan config:clear
+php artisan cache:clear
 php artisan migrate --force
 ```
 
-## Ajustes de segurança para produção
+## 4. Observações operacionais
 
-- Defina `APP_ENV=production`.
-- Defina `APP_DEBUG=false`.
-- Gere `APP_KEY` única por ambiente.
-- Utilize senha forte para banco e rotação periódica.
+- `QUEUE_CONNECTION=database` exige tabelas de fila migradas.
+- `SESSION_DRIVER=database` e `CACHE_STORE=database` exigem conectividade estável com o banco.
+- Em produção, mantenha `APP_DEBUG=false` e nunca versione segredos reais.

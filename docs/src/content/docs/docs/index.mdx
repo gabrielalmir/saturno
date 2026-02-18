@@ -3,7 +3,7 @@ title: Documentação Saturno
 description: Plataforma open source para gestão de sprints e trabalho técnico.
 template: splash
 hero:
-  tagline: Documentação oficial para instalação, operação e uso do Saturno.
+  tagline: Centro de operação para instalação, adoção e evolução do Saturno em times técnicos.
   actions:
     - text: Quick Start
       link: /docs/getting-started/quick-start/
@@ -21,20 +21,31 @@ hero:
 ---
 
 import DocsHomeCards from '@/components/docs/DocsHomeCards';
+import DocsTracks from '@/components/docs/DocsTracks';
 
 Saturno é uma plataforma open source para planejamento de sprints, gestão de work items e acompanhamento de execução em times técnicos.
 
-## Comece por aqui
+## Rota recomendada
 
 <DocsHomeCards />
 
-- **[Introdução](/docs/getting-started/introduction/)**
-- **[Quick Start em 5 minutos](/docs/getting-started/quick-start/)**
-- **[Instalação](/docs/getting-started/installation/)**
-- **[Configuração](/docs/getting-started/configuration/)**
+Se você está chegando agora, siga esta sequência para reduzir tempo de setup e evitar retrabalho:
+
+1. **[Introdução](/docs/getting-started/introduction/)** para visão da plataforma e arquitetura de alto nível.
+2. **[Quick Start](/docs/getting-started/quick-start/)** para validar o fluxo inicial localmente.
+3. **[Configuração](/docs/getting-started/configuration/)** para ajustar variáveis e comportamento do ambiente.
+4. **[Primeiro Projeto](/docs/guides/first-project/)** para operacionalizar o uso no time.
 
 ## Trilhas por objetivo
 
-- **Adotar o Saturno no time**: [Primeiro Projeto](/docs/guides/first-project/) e [Planejamento de Sprints](/docs/guides/planning-sprints/)
-- **Rodar em infraestrutura própria**: [Self Hosting](/docs/self-hosting/requirements/) e [Deploy em Produção](/docs/self-hosting/production-deploy/)
-- **Integrar com sistemas externos**: [Webhooks](/docs/integrations/webhooks/) e [Autenticação da API](/docs/integrations/api-authentication/)
+<DocsTracks />
+
+## Referências rápidas
+
+- **Infraestrutura**: [Requisitos](/docs/self-hosting/requirements/) e [Deploy em Produção](/docs/self-hosting/production-deploy/)
+- **Integrações**: [Webhooks](/docs/integrations/webhooks/) e [Autenticação da API](/docs/integrations/api-authentication/)
+- **Governança técnica**: [Permissões](/docs/reference/permissions/) e [Variáveis de Ambiente](/docs/reference/environment-variables/)
+
+## Contribuição open source
+
+Quer evoluir o projeto? Comece por **[Desenvolvimento](/docs/contributing/development/)**, revise a **[Arquitetura](/docs/contributing/architecture/)** e finalize com a trilha de **[Testes](/docs/contributing/testing/)** antes de abrir PR.
