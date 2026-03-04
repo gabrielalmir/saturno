@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
             : null
         );
 
-        if (app()->isProduction()) {
+        if (filter_var(env('APP_FORCE_HTTPS', false), FILTER_VALIDATE_BOOL)) {
             URL::forceScheme('https');
         }
     }
