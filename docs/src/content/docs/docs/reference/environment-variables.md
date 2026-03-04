@@ -15,6 +15,7 @@ Esta referência prioriza variáveis já utilizadas no projeto atual (`.env.exam
 | `APP_URL` | `http://localhost:8080` | URL base pública |
 | `APP_KEY` | `base64:...` | Obrigatória para criptografia/session |
 | `APP_PORT` | `8080` | Porta exposta pelo compose |
+| `APP_FORCE_HTTPS` | `false` | Força geração de URLs HTTPS quando `true` |
 
 ## Banco de dados
 
