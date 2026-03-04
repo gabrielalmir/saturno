@@ -15,10 +15,21 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('status')->default('open');
             $table->string('priority')->default('P2');
-            $table->foreignId('reporter_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('assignee_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('reporter_id')->nullable();
+            $table->foreignId('assignee_id')->nullable();
             $table->date('due_date')->nullable();
             $table->timestamps();
+
+            $reporterForeign = $table->foreign('reporter_id')->references('id')->on('users');
+            $assigneeForeign = $table->foreign('assignee_id')->references('id')->on('users');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $reporterForeign->noActionOnDelete();
+                $assigneeForeign->noActionOnDelete();
+            } else {
+                $reporterForeign->nullOnDelete();
+                $assigneeForeign->nullOnDelete();
+            }
         });
     }
 

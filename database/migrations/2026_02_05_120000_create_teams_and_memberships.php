@@ -30,11 +30,27 @@ return new class extends Migration
         });
 
         Schema::table('sprints', function (Blueprint $table) {
-            $table->foreignId('team_id')->nullable()->after('organization_id')->constrained('teams')->nullOnDelete();
+            $table->foreignId('team_id')->nullable()->after('organization_id');
+
+            $teamForeign = $table->foreign('team_id')->references('id')->on('teams');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $teamForeign->noActionOnDelete();
+            } else {
+                $teamForeign->nullOnDelete();
+            }
         });
 
         Schema::table('work_items', function (Blueprint $table) {
-            $table->foreignId('team_id')->nullable()->after('organization_id')->constrained('teams')->nullOnDelete();
+            $table->foreignId('team_id')->nullable()->after('organization_id');
+            $teamForeign = $table->foreign('team_id')->references('id')->on('teams');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $teamForeign->noActionOnDelete();
+            } else {
+                $teamForeign->nullOnDelete();
+            }
+
             $table->string('jira_key')->nullable()->after('ticket_id');
         });
 

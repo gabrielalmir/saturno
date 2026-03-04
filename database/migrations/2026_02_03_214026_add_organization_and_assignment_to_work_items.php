@@ -10,10 +10,24 @@ return new class extends Migration
     {
         Schema::table('work_items', function (Blueprint $table) {
             $table->foreignId('organization_id')->nullable()->after('id')->constrained()->cascadeOnDelete();
-            $table->foreignId('assignee_id')->nullable()->after('status')->constrained('users')->nullOnDelete();
-            $table->foreignId('reporter_id')->nullable()->after('assignee_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('assignee_id')->nullable()->after('status');
+            $table->foreignId('reporter_id')->nullable()->after('assignee_id');
             $table->integer('estimate')->nullable()->after('reporter_id');
-            $table->foreignId('epic_id')->nullable()->after('estimate')->constrained('epics')->nullOnDelete();
+            $table->foreignId('epic_id')->nullable()->after('estimate');
+
+            $assigneeForeign = $table->foreign('assignee_id')->references('id')->on('users');
+            $reporterForeign = $table->foreign('reporter_id')->references('id')->on('users');
+            $epicForeign = $table->foreign('epic_id')->references('id')->on('epics');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $assigneeForeign->noActionOnDelete();
+                $reporterForeign->noActionOnDelete();
+                $epicForeign->noActionOnDelete();
+            } else {
+                $assigneeForeign->nullOnDelete();
+                $reporterForeign->nullOnDelete();
+                $epicForeign->nullOnDelete();
+            }
         });
     }
 

@@ -9,7 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('work_items', function (Blueprint $table) {
-            $table->foreignId('ticket_id')->nullable()->after('epic_id')->constrained('tickets')->nullOnDelete();
+            $table->foreignId('ticket_id')->nullable()->after('epic_id');
+
+            $ticketForeign = $table->foreign('ticket_id')->references('id')->on('tickets');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $ticketForeign->noActionOnDelete();
+            } else {
+                $ticketForeign->nullOnDelete();
+            }
         });
     }
 

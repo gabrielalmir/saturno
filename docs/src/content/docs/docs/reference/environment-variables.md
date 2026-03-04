@@ -27,6 +27,8 @@ Esta referência prioriza variáveis já utilizadas no projeto atual (`.env.exam
 | `DB_USERNAME` | `saturno` | Usuário |
 | `DB_PASSWORD` | `changeme` | Defina segredo forte em produção |
 | `DB_SSLMODE` | `require` | Recomendado em ambiente externo |
+| `DB_ENCRYPT` | `true` / `false` / `yes` / `no` | Opcional para SQL Server (`sqlsrv`) |
+| `DB_TRUST_SERVER_CERTIFICATE` | `true` / `false` | Opcional para SQL Server (`sqlsrv`) |
 
 ## Fila, sessão e cache
 

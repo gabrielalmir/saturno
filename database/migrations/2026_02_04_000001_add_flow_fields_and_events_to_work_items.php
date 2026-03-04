@@ -22,12 +22,26 @@ return new class extends Migration
 
         Schema::create('work_item_events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('work_item_id')->constrained('work_items')->cascadeOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('organization_id');
+            $table->foreignId('work_item_id');
+            $table->foreignId('user_id')->nullable();
             $table->string('type'); // e.g. created, status_changed, assignee_changed
             $table->json('payload')->nullable();
             $table->timestamps();
+
+            $organizationForeign = $table->foreign('organization_id')->references('id')->on('organizations');
+            $workItemForeign = $table->foreign('work_item_id')->references('id')->on('work_items');
+            $userForeign = $table->foreign('user_id')->references('id')->on('users');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $organizationForeign->noActionOnDelete();
+                $workItemForeign->noActionOnDelete();
+                $userForeign->noActionOnDelete();
+            } else {
+                $organizationForeign->cascadeOnDelete();
+                $workItemForeign->cascadeOnDelete();
+                $userForeign->nullOnDelete();
+            }
 
             $table->index(['work_item_id', 'created_at']);
             $table->index(['organization_id', 'created_at']);

@@ -34,43 +34,110 @@ return new class extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('current_project_id')->nullable()->after('current_organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('current_project_id')->nullable()->after('current_organization_id');
+            $projectForeign = $table->foreign('current_project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
         });
 
         Schema::table('teams', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->after('organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->after('organization_id');
+            $projectForeign = $table->foreign('project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
         });
 
         Schema::table('sprints', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->after('organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->after('organization_id');
+            $projectForeign = $table->foreign('project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
+
             $table->index(['organization_id', 'project_id', 'status']);
         });
 
         Schema::table('work_items', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->after('organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->after('organization_id');
+            $projectForeign = $table->foreign('project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
+
             $table->index(['organization_id', 'project_id', 'status']);
         });
 
         Schema::table('tickets', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->after('organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->after('organization_id');
+            $projectForeign = $table->foreign('project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
+
             $table->index(['organization_id', 'project_id', 'status']);
         });
 
         Schema::table('boards', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->after('organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->after('organization_id');
+            $projectForeign = $table->foreign('project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
+
             $table->index(['organization_id', 'project_id', 'context_type']);
         });
 
         Schema::table('epics', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->after('organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->after('organization_id');
+            $projectForeign = $table->foreign('project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
         });
 
         Schema::table('stories', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->after('organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->after('organization_id');
+            $projectForeign = $table->foreign('project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
         });
 
         Schema::table('tasks', function (Blueprint $table) {
-            $table->foreignId('project_id')->nullable()->after('organization_id')->constrained('projects')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->after('organization_id');
+            $projectForeign = $table->foreign('project_id')->references('id')->on('projects');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $projectForeign->noActionOnDelete();
+            } else {
+                $projectForeign->nullOnDelete();
+            }
         });
 
         $organizations = DB::table('organizations')->get(['id', 'name']);

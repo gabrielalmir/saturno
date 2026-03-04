@@ -13,13 +13,24 @@ return new class extends Migration
     {
         Schema::create('team_events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete();
+            $table->foreignId('organization_id');
+            $table->foreignId('team_id');
             $table->string('name');
             $table->date('start_date');
             $table->date('end_date');
             $table->boolean('is_full_day')->default(true);
             $table->timestamps();
+
+            $organizationForeign = $table->foreign('organization_id')->references('id')->on('organizations');
+            $teamForeign = $table->foreign('team_id')->references('id')->on('teams');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $organizationForeign->noActionOnDelete();
+                $teamForeign->noActionOnDelete();
+            } else {
+                $organizationForeign->cascadeOnDelete();
+                $teamForeign->cascadeOnDelete();
+            }
         });
     }
 
