@@ -9,7 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('sprints', function (Blueprint $table) {
-            $table->foreignId('organization_id')->nullable()->after('id')->constrained()->cascadeOnDelete();
+            $table->foreignId('organization_id')->nullable()->after('id');
+
+            $organizationForeign = $table->foreign('organization_id')->references('id')->on('organizations');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $organizationForeign->noActionOnDelete();
+            } else {
+                $organizationForeign->cascadeOnDelete();
+            }
         });
     }
 

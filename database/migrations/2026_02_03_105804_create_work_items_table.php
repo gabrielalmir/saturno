@@ -21,7 +21,14 @@ return new class extends Migration
             $table->string('priority')->default('P2'); // P0-P3
             $table->string('status')->default('backlog');
             $table->foreignId('sprint_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('parent_id')->nullable()->constrained('work_items')->nullOnDelete();
+            $table->foreignId('parent_id')->nullable();
+            $parentForeign = $table->foreign('parent_id')->references('id')->on('work_items');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $parentForeign->noActionOnDelete();
+            } else {
+                $parentForeign->nullOnDelete();
+            }
             $table->timestamps();
         });
     }

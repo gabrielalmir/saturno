@@ -23,13 +23,24 @@ return new class extends Migration
         Schema::create('absences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('team_id')->nullable()->constrained('teams')->nullOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('team_id')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('availability_percentage')->default(0);
             $table->string('reason')->nullable();
             $table->timestamps();
+
+            $teamForeign = $table->foreign('team_id')->references('id')->on('teams');
+            $userForeign = $table->foreign('user_id')->references('id')->on('users');
+
+            if (Schema::getConnection()->getDriverName() === 'sqlsrv') {
+                $teamForeign->noActionOnDelete();
+                $userForeign->noActionOnDelete();
+            } else {
+                $teamForeign->nullOnDelete();
+                $userForeign->nullOnDelete();
+            }
 
             $table->index(['organization_id', 'team_id']);
             $table->index(['start_date', 'end_date']);
