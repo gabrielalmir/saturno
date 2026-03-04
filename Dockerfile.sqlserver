@@ -7,7 +7,7 @@ ARG PHP_VERSION=8.5
 ARG NODE_VERSION=24
 
 # Node tooling stage
-FROM node:${NODE_VERSION}-alpine AS node-tooling
+FROM node:${NODE_VERSION}-bookworm-slim AS node-tooling
 
 # Build stage (PHP + Composer + Node)
 FROM php:${PHP_VERSION}-cli-bookworm AS build
@@ -133,4 +133,3 @@ ENV APP_ENV=production \
 EXPOSE 8080
 
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
-
