@@ -3,7 +3,13 @@
 # SQL Server image: Postgres is not included; only SQL Server (pdo_sqlsrv/sqlsrv).
 # Uses Debian to install Microsoft ODBC driver reliably.
 
-ARG PHP_VERSION=8.5
+# Compatibility note:
+# - PHP 8.3 is the default because the sqlsrv/pdo_sqlsrv PECL drivers are
+#   broadly validated with SQL Server 2019+ on this runtime.
+# - You can override PHP_VERSION at build time if your own validation matrix
+#   confirms support for a newer major.
+
+ARG PHP_VERSION=8.3
 ARG NODE_VERSION=24
 
 # Node tooling stage
@@ -128,6 +134,8 @@ RUN mkdir -p storage/logs \
 ENV APP_ENV=production \
     APP_DEBUG=false \
     DB_CONNECTION=sqlsrv \
+    DB_ENCRYPT=true \
+    DB_TRUST_SERVER_CERTIFICATE=true \
     PORT=8080
 
 EXPOSE 8080

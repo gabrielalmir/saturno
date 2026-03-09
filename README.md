@@ -52,7 +52,7 @@ Read more about the product vision in [`docs/IDEA.md`](./docs/IDEA.md).
 
 ### Backend
 - **Framework**: Laravel 12 (PHP 8.2+)
-- **Database**: SQLite (default) / PostgreSQL
+- **Database**: SQLite (default) / PostgreSQL / SQL Server 2019+
 - **Authentication**: Laravel Fortify
 - **Queue**: Laravel Queue
 
@@ -77,7 +77,7 @@ Read more about the product vision in [`docs/IDEA.md`](./docs/IDEA.md).
 - PHP 8.2 or higher
 - Composer
 - Node.js 18+ and npm
-- SQLite or PostgreSQL
+- SQLite, PostgreSQL, ou SQL Server 2019+
 
 ### Installation
 
@@ -213,9 +213,21 @@ Saturno uses SQLite by default for simplicity. To use PostgreSQL:
 
 ## 🐳 Self-Hosting with Docker
 
-*(Coming soon)*
+### PostgreSQL (default)
 
-Saturno is designed to be easily self-hosted. Docker support is in development.
+```bash
+docker compose up -d --build
+```
+
+### SQL Server 2019+
+
+O projeto possui uma stack dedicada para SQL Server:
+
+```bash
+docker compose -f docker-compose.sqlserver.yml up -d --build
+```
+
+Consulte o guia completo de compatibilidade e configuração em [`docs/DOCKER_SQLSERVER.md`](./docs/DOCKER_SQLSERVER.md).
 
 ---
 
