@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.sqlserver
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.3}
+        NODE_VERSION: ${NODE_VERSION:-24}
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    env_file: .env
+    environment:
+      DB_CONNECTION: sqlsrv
+      DB_HOST: db
+      DB_PORT: 1433
+    depends_on:
+      db:
+        condition: service_started
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_PID: ${MSSQL_PID:-Developer}
+      SA_PASSWORD: ${DB_PASSWORD:-YourStrong!Passw0rd}
+      MSSQL_COLLATION: ${MSSQL_COLLATION:-SQL_Latin1_General_CP1_CI_AS}
+    ports:
+      - "${DB_PORT:-1433}:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:
