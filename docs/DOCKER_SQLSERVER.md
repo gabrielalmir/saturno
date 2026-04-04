@@ -89,6 +89,10 @@ docker compose -f docker-compose.sqlserver.yml exec app php -m | rg "sqlsrv|pdo_
 
 ## 5) Checklist de troubleshooting
 
+- **Erro `Cannot open database "saturno"`**:
+  - O SQL Server não cria o banco automaticamente.
+  - O projeto inclui um serviço `db-init` no `docker-compose.sqlserver.yml` que resolve isso.
+  - Se precisar criar manualmente: `docker compose exec db /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'YourStrong!Passw0rd' -Q "CREATE DATABASE [saturno]"`
 - Verifique se `DB_CONNECTION=sqlsrv`
 - Verifique se `DB_HOST=db` no ambiente Docker
 - Verifique se `SA_PASSWORD` e `DB_PASSWORD` são iguais
