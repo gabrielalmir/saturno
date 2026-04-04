@@ -46,6 +46,10 @@ class ProviderHttpClient
                 ->connectTimeout($connectTimeout)
                 ->withHeaders($headers);
 
+            if (config('services.http_verify') === false) {
+                $client->withoutVerifying();
+            }
+
             if ($method === 'get') {
                 $response = $client->get($url, $query);
             } elseif ($method === 'post') {

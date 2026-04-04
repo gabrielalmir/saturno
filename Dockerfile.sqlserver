@@ -1,13 +1,7 @@
 # syntax=docker/dockerfile:1
 
-# SQL Server image: Postgres is not included; only SQL Server (pdo_sqlsrv/sqlsrv).
-# Uses Debian to install Microsoft ODBC driver reliably.
-
-# Compatibility note:
-# - PHP 8.3 is the default because the sqlsrv/pdo_sqlsrv PECL drivers are
-#   broadly validated with SQL Server 2019+ on this runtime.
-# - You can override PHP_VERSION at build time if your own validation matrix
-#   confirms support for a newer major.
+# SQL Server image: Dedicated to SQL Server (pdo_sqlsrv/sqlsrv).
+# Uses Debian Bookworm for reliable Microsoft ODBC driver support.
 
 ARG PHP_VERSION=8.3
 ARG NODE_VERSION=24
@@ -19,6 +13,7 @@ FROM node:${NODE_VERSION}-bookworm-slim AS node-tooling
 FROM php:${PHP_VERSION}-cli-bookworm AS build
 WORKDIR /app
 
+# Install system dependencies and build tools
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
       ca-certificates \
@@ -28,11 +23,14 @@ RUN apt-get update \
       unzip \
       libicu72 \
       libzip4 \
-  && apt-get install -y --no-install-recommends \
+      # Build tools for PECL and NPM gyp
       $PHPIZE_DEPS \
       unixodbc-dev \
       libicu-dev \
       libzip-dev \
+      python3 \
+      make \
+      g++ \
   && rm -rf /var/lib/apt/lists/*
 
 # Microsoft ODBC Driver for SQL Server + PHP extensions (sqlsrv/pdo_sqlsrv).
@@ -45,19 +43,29 @@ RUN set -eux; \
   pecl install sqlsrv pdo_sqlsrv; \
   docker-php-ext-enable sqlsrv pdo_sqlsrv
 
-RUN docker-php-ext-install bcmath intl zip
+# Standard Laravel extensions + performance (opcache/pcntl)
+RUN docker-php-ext-install bcmath intl zip pcntl opcache
 
+# Copy tools from official images
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
-COPY --from=node-tooling /usr/local/ /usr/local/
+COPY --from=node-tooling /usr/local/bin/node /usr/local/bin/node
+COPY --from=node-tooling /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
+
+# Opcache production configuration
+RUN { \
+    echo 'opcache.memory_consumption=128'; \
+    echo 'opcache.interned_strings_buffer=8'; \
+    echo 'opcache.max_accelerated_files=4000'; \
+    echo 'opcache.revalidate_freq=0'; \
+    echo 'opcache.fast_shutdown=1'; \
+    echo 'opcache.enable_cli=1'; \
+  } > /usr/local/etc/php/conf.d/docker-php-ext-opcache-prod.ini
 
 COPY composer.json composer.lock ./
 COPY package.json package-lock.json ./
-RUN composer install --no-dev --no-interaction --no-ansi --no-progress --prefer-dist --no-scripts
 
-# Some npm deps may use node-gyp; keep toolchain in the build stage only.
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3 make g++ \
-  && rm -rf /var/lib/apt/lists/*
+RUN composer install --no-dev --no-interaction --no-ansi --no-progress --prefer-dist --no-scripts
 RUN npm ci
 
 COPY . ./
@@ -78,8 +86,8 @@ ENV APP_ENV=production \
 RUN rm -f public/hot
 RUN npm run build
 
-RUN apt-get purge -y --auto-remove python3 make g++ \
-  && rm -rf node_modules \
+# Purge build-only artifacts
+RUN rm -rf node_modules \
     resources/js \
     resources/css \
     docker \
@@ -103,6 +111,7 @@ RUN apt-get update \
       unixodbc \
   && rm -rf /var/lib/apt/lists/*
 
+# Microsoft ODBC Driver for runtime
 RUN set -eux; \
   curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /usr/share/keyrings/microsoft.gpg; \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/debian/12/prod bookworm main" > /etc/apt/sources.list.d/microsoft-prod.list; \
@@ -110,15 +119,16 @@ RUN set -eux; \
   ACCEPT_EULA=Y apt-get install -y --no-install-recommends msodbcsql18; \
   rm -rf /var/lib/apt/lists/*
 
+# Copy PHP extensions and config from build
 COPY --from=build /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
 COPY --from=build /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 
+# Copy application code
 COPY --from=build /app /var/www/html
 
-# Debian nginx loads /etc/nginx/conf.d/*.conf by default.
+# Configuration files
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY docker/supervisor/supervisord.conf /etc/supervisord.conf
-
 COPY docker/php-fpm/php-fpm.conf /usr/local/etc/php-fpm.conf
 COPY docker/php-fpm/www.conf /usr/local/etc/php-fpm.d/www.conf
 

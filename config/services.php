@@ -35,4 +35,6 @@ return [
         ],
     ],
 
+    'http_verify' => env('HTTP_VERIFY', true),
+
 ];
