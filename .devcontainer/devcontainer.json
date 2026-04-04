@@ -1,5 +1,5 @@
 {
-  "name": "Saturno (PHP 8.3 + SQL Server)",
+  "name": "Saturno (PHP 8.4 + SQL Server)",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/saturno",
