@@ -7,19 +7,8 @@ services:
       - ..:/workspaces/saturno:cached
     command: sleep infinity
     environment:
-      DB_CONNECTION: sqlsrv
-      DB_HOST: db
-      DB_PORT: 1433
-      DB_DATABASE: saturno
-      DB_USERNAME: sa
-      DB_PASSWORD: YourStrong!Passw0rd
-      DB_ENCRYPT: true
-      DB_TRUST_SERVER_CERTIFICATE: true
-
-  db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    environment:
-      ACCEPT_EULA: Y
-      SA_PASSWORD: YourStrong!Passw0rd
-    ports:
-      - "1433:1433"
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /workspaces/saturno/database/database.sqlite
+    env_file:
+      - path: ../.env
+        required: false

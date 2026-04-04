@@ -3,7 +3,7 @@
 # SQL Server image: Dedicated to SQL Server (pdo_sqlsrv/sqlsrv).
 # Uses Debian Bookworm for reliable Microsoft ODBC driver support.
 
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=8.4
 ARG NODE_VERSION=24
 
 # Node tooling stage

@@ -12,7 +12,7 @@ console_command = 'php /var/www/html/artisan tinker'
 
   [build.args]
     NODE_VERSION = '24'
-    PHP_VERSION = '8.5'
+    PHP_VERSION = '8.4'
 
 [deploy]
   release_command = 'php artisan migrate --force'

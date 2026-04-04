@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile.sqlserver
       args:
-        PHP_VERSION: ${PHP_VERSION:-8.3}
+        PHP_VERSION: ${PHP_VERSION:-8.4}
         NODE_VERSION: ${NODE_VERSION:-24}
     restart: unless-stopped
     ports:
@@ -15,8 +15,8 @@ services:
       DB_HOST: db
       DB_PORT: 1433
     depends_on:
-      db:
-        condition: service_started
+      - db
+      - db-init
 
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -30,6 +30,18 @@ services:
       - "${DB_PORT:-1433}:1433"
     volumes:
       - mssql_data:/var/opt/mssql
+
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    depends_on:
+      - db
+    environment:
+      SA_PASSWORD: ${DB_PASSWORD:-YourStrong!Passw0rd}
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        /opt/mssql-tools/bin/sqlcmd -S db -U sa -P "$$SA_PASSWORD" -C -Q "IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'saturno') CREATE DATABASE [saturno]"
 
 volumes:
   mssql_data:
