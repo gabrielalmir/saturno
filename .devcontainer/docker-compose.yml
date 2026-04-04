@@ -7,45 +7,29 @@ services:
       - ..:/workspaces/saturno:cached
     command: sleep infinity
     environment:
-      DB_CONNECTION: sqlsrv
+      DB_CONNECTION: pgsql
       DB_HOST: db
-      DB_PORT: 1433
+      DB_PORT: 5432
       DB_DATABASE: saturno
-      DB_USERNAME: sa
-      DB_PASSWORD: YourStrong!Passw0rd
-      DB_ENCRYPT: true
-      DB_TRUST_SERVER_CERTIFICATE: true
+      DB_USERNAME: saturno
+      DB_PASSWORD: changeme
+    env_file:
+      - path: ../.env
+        required: false
     depends_on:
       db:
         condition: service_healthy
-      db-init:
-        condition: service_completed_successfully
 
   db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: postgres:17-alpine
     environment:
-      ACCEPT_EULA: Y
-      SA_PASSWORD: YourStrong!Passw0rd
+      POSTGRES_DB: saturno
+      POSTGRES_USER: saturno
+      POSTGRES_PASSWORD: changeme
     ports:
-      - "1433:1433"
+      - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$$SA_PASSWORD\" -C -Q \"SELECT 1\" || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-
-  db-init:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      SA_PASSWORD: YourStrong!Passw0rd
-    entrypoint:
-      - /bin/bash
-      - -c
-      - |
-        echo "Criando banco de dados saturno..."
-        /opt/mssql-tools/bin/sqlcmd -S db -U sa -P "$SA_PASSWORD" -C -Q "IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'saturno') CREATE DATABASE [saturno]"
-        echo "Pronto."
+      test: ["CMD-SHELL", "pg_isready -U saturno"]
+      interval: 5s
+      timeout: 3s
+      retries: 5

@@ -2,7 +2,7 @@
 
 # Default image: Postgres only (smaller, Alpine-based).
 
-ARG PHP_VERSION=8.5
+ARG PHP_VERSION=8.4
 ARG NODE_VERSION=24
 
 # Node tooling stage
