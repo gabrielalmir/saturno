@@ -7,29 +7,8 @@ services:
       - ..:/workspaces/saturno:cached
     command: sleep infinity
     environment:
-      DB_CONNECTION: pgsql
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_DATABASE: saturno
-      DB_USERNAME: saturno
-      DB_PASSWORD: changeme
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /workspaces/saturno/database/database.sqlite
     env_file:
       - path: ../.env
         required: false
-    depends_on:
-      db:
-        condition: service_healthy
-
-  db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_DB: saturno
-      POSTGRES_USER: saturno
-      POSTGRES_PASSWORD: changeme
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U saturno"]
-      interval: 5s
-      timeout: 3s
-      retries: 5

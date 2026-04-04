@@ -13,12 +13,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzip4 \
     libicu-dev \
     libzip-dev \
-    libpq-dev \
+    sqlite3 \
+    libsqlite3-dev \
     sudo \
     && rm -rf /var/lib/apt/lists/*
 
-# Standard extensions (PostgreSQL + other common Laravel ones)
-RUN docker-php-ext-install bcmath intl zip pcntl pdo_pgsql
+# Standard extensions
+RUN docker-php-ext-install bcmath intl zip pcntl pdo_sqlite
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
