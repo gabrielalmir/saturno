@@ -16,6 +16,8 @@ services:
       DB_ENCRYPT: true
       DB_TRUST_SERVER_CERTIFICATE: true
     depends_on:
+      db:
+        condition: service_healthy
       db-init:
         condition: service_completed_successfully
 
@@ -26,27 +28,24 @@ services:
       SA_PASSWORD: YourStrong!Passw0rd
     ports:
       - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$$SA_PASSWORD\" -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   db-init:
     image: mcr.microsoft.com/mssql/server:2019-latest
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       SA_PASSWORD: YourStrong!Passw0rd
     entrypoint:
       - /bin/bash
       - -c
       - |
-        echo "Aguardando SQL Server (db:1433)..."
-        for i in {1..50}; do
-          if /opt/mssql-tools/bin/sqlcmd -S db -U sa -P "$SA_PASSWORD" -Q "SELECT 1" > /dev/null 2>&1; then
-            echo "Conectado! Criando banco saturno..."
-            /opt/mssql-tools/bin/sqlcmd -S db -U sa -P "$SA_PASSWORD" -Q "IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'saturno') CREATE DATABASE [saturno]"
-            echo "Pronto."
-            exit 0
-          fi
-          echo "Tentativa $i: SQL Server ainda indisponível..."
-          sleep 5
-        done
-        echo "Erro: Tempo esgotado."
-        exit 1
+        echo "Criando banco de dados saturno..."
+        /opt/mssql-tools/bin/sqlcmd -S db -U sa -P "$SA_PASSWORD" -C -Q "IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'saturno') CREATE DATABASE [saturno]"
+        echo "Pronto."
