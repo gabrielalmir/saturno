@@ -37,7 +37,7 @@ O projeto está compatível com SQL Server 2019+ para os principais recursos de 
    - Garanta senha forte e que atenda política do SQL Server.
 
 4. **Versão de PHP para sqlsrv**
-   - A imagem SQL Server usa PHP 8.3 por padrão por melhor maturidade prática do driver PECL (`sqlsrv`, `pdo_sqlsrv`) com SQL Server 2019+.
+   - A imagem SQL Server usa PHP 8.4 por padrão por melhor maturidade prática do driver PECL (`sqlsrv`, `pdo_sqlsrv`) com SQL Server 2019+.
 
 ## 3) Arquivos de infraestrutura
 

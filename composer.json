@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "fabian-beiner/todoist-php-api-library": "^2.0",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/fortify": "^1.30",
