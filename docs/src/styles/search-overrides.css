@@ -1,0 +1,224 @@
+/* Search modal + Pagefind overrides (compact, linear-like, accessible) */
+
+:root {
+	/* App-like tokens (fallbacks para docs theme) */
+	--bg-elevated: #10131a;
+	--bg-surface: #141922;
+	--border-subtle: #202837;
+	--text-primary: #dfe5ef;
+	--text-secondary: #9ca6b5;
+	--text-tertiary: #778295;
+	--accent-soft: rgba(94, 106, 210, 0.18);
+	--focus-ring: #5e6ad2;
+}
+
+:root[data-theme='light'] {
+	--bg-elevated: #f1f4fa;
+	--bg-surface: #ffffff;
+	--border-subtle: #d8e0ed;
+	--text-primary: #1c2433;
+	--text-secondary: #4b5a70;
+	--text-tertiary: #64748b;
+	--accent-soft: rgba(94, 106, 210, 0.14);
+	--focus-ring: #5e6ad2;
+}
+
+/* 1) Modal shell compact */
+site-search dialog {
+	background: var(--bg-elevated);
+	border: 1px solid var(--border-subtle);
+}
+
+site-search dialog[open] {
+	overflow: hidden;
+}
+
+site-search dialog .dialog-frame {
+	padding: 0.85rem 0.9rem 1rem;
+	gap: 0.65rem;
+	overflow: auto;
+	scroll-behavior: smooth;
+}
+
+site-search dialog .search-modal-head {
+	gap: 0.08rem;
+	padding-inline-end: 2.2rem;
+}
+
+site-search dialog .search-modal-title {
+	font-size: 0.92rem;
+	font-weight: 600;
+	line-height: 1.25;
+	color: var(--text-primary);
+}
+
+site-search dialog .search-modal-subtitle {
+	font-size: 0.78rem;
+	line-height: 1.25;
+	color: var(--text-tertiary);
+}
+
+site-search dialog .close-modal-btn {
+	top: 0.72rem;
+	right: 0.72rem;
+	height: 1.75rem;
+	width: 1.75rem;
+	border-radius: 0.45rem;
+	background: var(--bg-surface);
+	border: 1px solid var(--border-subtle);
+	color: var(--text-secondary);
+}
+
+site-search dialog .close-modal-btn:hover {
+	background: color-mix(in oklab, var(--bg-surface) 88%, var(--accent-soft));
+	color: var(--text-primary);
+}
+
+site-search dialog .search-container {
+	min-height: 0;
+	padding-inline: 0;
+}
+
+@media (min-width: 50rem) {
+	site-search dialog {
+		margin: 4.2rem auto auto;
+		width: min(90vw, 44rem);
+		max-width: 44rem;
+		min-height: 14rem;
+		max-height: calc(100vh - 5.2rem);
+		border-radius: 0.7rem;
+	}
+}
+
+/* 2) Search input + toolbar */
+body #starlight__search .pagefind-ui__form {
+	margin-bottom: 0.6rem;
+}
+
+body #starlight__search .pagefind-ui__search-input {
+	height: 2.2rem;
+	padding-block: 0.35rem;
+	font-size: 0.86rem;
+	font-weight: 500;
+	color: var(--text-primary);
+	background: var(--bg-surface);
+	border: 1px solid var(--border-subtle);
+	border-radius: 0.52rem;
+}
+
+body #starlight__search .pagefind-ui__search-input::placeholder {
+	color: var(--text-tertiary);
+}
+
+body #starlight__search .pagefind-ui__search-clear {
+	height: 1.7rem;
+	width: 1.7rem;
+	inset-inline-end: 0.35rem;
+}
+
+body #starlight__search input:focus,
+body #starlight__search input:focus-visible {
+	outline: 2px solid color-mix(in oklab, var(--focus-ring) 70%, transparent);
+	outline-offset: 1px;
+	box-shadow: none;
+}
+
+/* 3) Result list density */
+body #starlight__search .pagefind-ui__results {
+	display: grid;
+	gap: 0.5rem;
+}
+
+body #starlight__search .pagefind-ui__results > * + * {
+	margin-top: 0;
+}
+
+body #starlight__search .pagefind-ui__result,
+body #starlight__search .pagefind-ui__result-nested {
+	padding: 0;
+	border: 0;
+}
+
+body #starlight__search .pagefind-ui__result-title,
+body #starlight__search .pagefind-ui__result-nested {
+	background: var(--bg-surface);
+	border: 1px solid var(--border-subtle);
+	border-radius: 0.5rem;
+	box-shadow: none;
+}
+
+body #starlight__search .pagefind-ui__result-inner {
+	gap: 0;
+}
+
+body #starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title {
+	padding: 0.55rem 0.72rem 0.42rem 2.55rem;
+}
+
+body #starlight__search .pagefind-ui__result-nested {
+	padding: 0.42rem 0.72rem 0.42rem 2.55rem;
+}
+
+body #starlight__search .pagefind-ui__result-link {
+	font-size: 0.9rem;
+	line-height: 1.35;
+	font-weight: 600;
+	color: var(--text-primary);
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+}
+
+body #starlight__search .pagefind-ui__result-excerpt {
+	margin-top: 0.2rem;
+	font-size: 0.79rem;
+	line-height: 1.38;
+	font-weight: 400;
+	color: var(--text-secondary);
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+body #starlight__search .pagefind-ui__result-tags {
+	margin-top: 0;
+	padding: 0.28rem 0.72rem 0.4rem 2.55rem;
+	background: var(--bg-surface);
+}
+
+body #starlight__search .pagefind-ui__message {
+	font-size: 0.78rem;
+	line-height: 1.3;
+	color: var(--text-tertiary);
+	margin: 0.25rem 0 0.15rem;
+}
+
+/* 4) Highlight (discreto) */
+body #starlight__search mark {
+	padding: 0 0.08em;
+	border-radius: 0.2rem;
+	background: var(--accent-soft);
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-color: color-mix(in oklab, var(--focus-ring) 50%, transparent);
+	text-decoration-thickness: 1.5px;
+	text-underline-offset: 0.07em;
+}
+
+/* 5) Hover/active/focus (acessível e sutil) */
+body #starlight__search .pagefind-ui__result-title:hover,
+body #starlight__search .pagefind-ui__result-nested:hover {
+	background: color-mix(in oklab, var(--bg-surface) 92%, var(--accent-soft));
+	border-color: color-mix(in oklab, var(--border-subtle) 65%, var(--focus-ring));
+}
+
+body #starlight__search .pagefind-ui__result-title:focus-within,
+body #starlight__search .pagefind-ui__result-nested:focus-within,
+body #starlight__search .pagefind-ui__result-link:focus-visible {
+	outline: 2px solid color-mix(in oklab, var(--focus-ring) 72%, transparent);
+	outline-offset: 1px;
+	border-color: var(--focus-ring);
+	border-radius: 0.55rem;
+}
