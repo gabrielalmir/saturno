@@ -14,11 +14,13 @@ Saturno was born from the need for a project management tool that:
 - **For Analysts**: Offers a comfortable, Kanban-style workflow without bureaucratic overhead
 - **For Everyone**: Integrates seamlessly with existing tools (JIRA, Trello) while remaining simple and self-hostable
 
-Read more about the product vision in [`docs/IDEA.md`](./docs/IDEA.md).
+Read the technical scope in [`SPECS.md`](./SPECS.md).
 
 ---
 
-## ✨ Key Features
+## ✨ Product scope
+
+Saturno is a portfolio project. The capabilities below describe its intended scope; consult the routes, tests and running application to verify individual workflows. There is no claim of production adoption.
 
 ### 🎨 Role-Based Views
 - **Manager View**: Epic and story-level planning, cross-team metrics, capacity forecasting
@@ -240,7 +242,7 @@ Link existing JIRA tickets to Saturno work items. Configure in **Settings → In
 Import boards and cards (planned).
 
 ### Custom Integrations
-Saturno provides an extensible integration framework. Check the [API documentation](./docs/api.md) for details.
+Saturno provides an extensible integration framework. See the [application routes](./routes/web.php) for the implemented HTTP surface.
 
 ---
 
